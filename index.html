@@ -639,7 +639,7 @@
 
     .qb-price-bar {
       position: fixed;
-      bottom: 76px;
+      bottom: 60px;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
@@ -1010,7 +1010,7 @@
 
       .qb-button-group { max-width: 100%; padding: 12px 16px; }
       .qb-button { font-size: 15px; padding: 12px 20px; }
-      .qb-price-bar { padding: 10px 16px; bottom: 68px; }
+      .qb-price-bar { padding: 10px 16px; }
       .qb-price-value { font-size: 17px; }
       .qb-total-value { font-size: 26px; }
 
@@ -1022,8 +1022,9 @@
       .qb-zoom-nav { width: 36px; height: 36px; font-size: 18px; }
       .qb-zoom-footer { flex-direction: column; gap: 8px; }
 
-      .qb-confirmation-row { flex-direction: column; gap: 6px; }
+      .qb-confirmation-row { flex-direction: column; gap: 6px; align-items: flex-start; }
       .qb-confirmation-label { min-width: auto; }
+      .qb-confirmation-value { align-items: flex-start; }
     }
 
     /* ── 모바일 (480px 이하) ── */
@@ -1059,7 +1060,7 @@
       .qb-button-group { flex-direction: column; padding: 10px; gap: 8px; }
       .qb-button { font-size: 14px; padding: 11px 16px; }
 
-      .qb-price-bar { padding: 8px 10px; bottom: 112px; }
+      .qb-price-bar { padding: 8px 10px; }
       .qb-price-info { gap: 16px; }
       .qb-price-label { font-size: 10px; }
       .qb-price-value { font-size: 14px; }
@@ -2396,6 +2397,9 @@
       qb_buildBreadcrumb();
       qb_updatePriceBar();
       window.scrollTo(0, 0);
+
+      // 가격바 위치를 버튼그룹 실제 높이에 맞춤
+      requestAnimationFrame(qb_adjustPriceBarPosition);
     }
 
     function qb_checkCustomerForm() {
@@ -2513,11 +2517,23 @@
       }
     })();
 
+    // 가격바 위치 동적 조정 함수
+    function qb_adjustPriceBarPosition() {
+      const activeStep = document.querySelector('.qb-step-content.active');
+      const btnGroup = activeStep ? activeStep.querySelector('.qb-button-group') : null;
+      const priceBar = document.getElementById('qb-price-bar');
+      if (btnGroup && priceBar) {
+        priceBar.style.bottom = btnGroup.offsetHeight + 'px';
+      }
+    }
+    window.addEventListener('resize', qb_adjustPriceBarPosition);
+
     // Initialize with error catching
     try {
       qb_renderSeriesSelection();
       qb_updateStepIndicator();
       qb_updatePriceBar();
+      requestAnimationFrame(qb_adjustPriceBarPosition);
     } catch(e) {
       console.error('Init error:', e);
     }
