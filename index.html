@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시판 간편구매 - 위자드</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif;
+      background: #1a1a2e;
+      color: #e8e8ec;
+      line-height: 1.6;
+    }
+
+    .qb-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .qb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+
+    .qb-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .qb-logo-mark {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #4A7BF7, #6a9bff);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .qb-logo-group {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .qb-logo-brand {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .qb-logo-img {
+      height: 34px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .qb-logo-fallback {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qb-progress {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      padding: 12px 0 16px;
+      width: 100%;
+    }
+
+    .qb-progress-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+
+    .qb-progress-label {
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .qb-progress-label.done { color: #4A7BF7; }
+    .qb-progress-label.current { color: #4A7BF7; }
+    .qb-progress-label.upcoming { color: #6a6a88; }
+
+    .qb-progress-step {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .qb-progress-step.done {
+      background: #4A7BF7;
+      color: #fff;
+    }
+
+    .qb-progress-step.current {
+      background: transparent;
+      color: #4A7BF7;
+      border: 2.5px solid #4A7BF7;
+      box-shadow: 0 0 0 3px rgba(74,123,247,0.2);
+    }
+
+    .qb-progress-step.upcoming {
+      background: #353560;
+      color: #6a6a88;
+    }
+
+    .qb-progress-line {
+      flex: 1;
+      height: 2px;
+      min-width: 8px;
+      margin-top: 14px;
+    }
+
+    .qb-progress-line.done {
+      background: #4A7BF7;
+    }
+
+    .qb-progress-line.upcoming {
+      background: #353560;
+    }
+
+    .qb-step-content {
+      display: none;
+    }
+
+    .qb-step-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+      padding-bottom: 140px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .qb-step-title {
+      font-size: 34px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .qb-step-subtitle {
+      font-size: 16px;
+      color: #9ca3b8;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    .qb-card {
+      background: #242442;
+      border: 1px solid #353560;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+
+    .qb-card:hover {
+      border-color: #4A7BF7;
+      box-shadow: 0 4px 12px rgba(74,123,247,0.15);
+    }
+
+    .qb-card.selected {
+      border-color: #4A7BF7;
+      background: #2a2a50;
+    }
+
+    .qb-card-radio {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .qb-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #555580;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .qb-card.selected .qb-radio {
+      border-color: #4A7BF7;
+      background: #4A7BF7;
+    }
+
+    .qb-radio::after {
+      content: '✓';
+      color: white;
+      font-size: 12px;
+      display: none;
+    }
+
+    .qb-card.selected .qb-radio::after {
+      display: block;
+    }
+
+    .qb-card-label {
+      flex: 1;
+    }
+
+    .qb-card-title {
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .qb-card-desc {
+      font-size: 16px;
+      color: #9ca3b8;
+    }
+
+    .qb-series-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .qb-series-card {
+      background: #242442;
+      border: 2px solid #353560;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .qb-series-card:hover {
+      border-color: #4A7BF7;
+      box-shadow: 0 8px 16px rgba(74,123,247,0.2);
+    }
+
+    .qb-series-card.selected {
+      border-color: #4A7BF7;
+      box-shadow: 0 8px 16px rgba(74,123,247,0.25);
+    }
+
+    .qb-series-image {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #1e1e38;
+      display: block;
+      min-height: 60px;
+    }
+
+    .qb-series-info {
+      padding: 14px;
+      text-align: center;
+      background: transparent;
+    }
+
+    .qb-series-name {
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .qb-series-desc {
+      font-size: 15px;
+      color: #9ca3b8;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .qb-series-meta {
+      font-size: 13px;
+      color: #7a7a98;
+    }
+
+    .qb-detail-btn {
+      margin-top: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #4A7BF7;
+      background: #2a2a50;
+      border: 1px solid #353560;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .qb-detail-btn:hover {
+      background: #353560;
+      color: #6a9bff;
+    }
+
+    /* 상세페이지 뷰어 모달 */
+    .qb-detail-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(3px);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .qb-detail-overlay.active {
+      display: flex;
+    }
+    .qb-detail-wrap {
+      background: #242442;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 900px;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .qb-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #2a2a4a;
+      background: #1e1e36;
+      flex-shrink: 0;
+    }
+    .qb-detail-header span {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e8e8ec;
+    }
+    .qb-detail-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #353560;
+      color: #c0c0d0;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .qb-detail-close:hover {
+      background: #4a4a70;
+    }
+    .qb-detail-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .qb-detail-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: #7a7a98;
+      font-size: 14px;
+    }
+    .qb-detail-content {
+      padding: 0;
+    }
+    .qb-detail-content img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .qb-series-group {
+      margin-bottom: 40px;
+    }
+
+    .qb-series-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #9ca3b8;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #353560;
+    }
+
+    .qb-design-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .qb-design-item {
+      background: #242442;
+      border: 1px solid #353560;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .qb-design-item:hover {
+      border-color: #4A7BF7;
+      box-shadow: 0 4px 8px rgba(74,123,247,0.15);
+    }
+
+    .qb-design-item.selected {
+      border-color: #4A7BF7;
+      background: #2a2a50;
+    }
+
+    .qb-design-image {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #1e1e38;
+      position: relative;
+    }
+
+    .qb-design-zoom-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .qb-design-item:hover .qb-design-zoom-icon {
+      opacity: 1;
+    }
+
+    .qb-design-info {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .qb-design-code {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e8e8ec;
+    }
+
+    .qb-design-button {
+      width: 100%;
+      padding: 6px;
+      background: #2a2a50;
+      border: 1px solid #353560;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #4A7BF7;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .qb-design-item.selected .qb-design-button {
+      background: #4A7BF7;
+      color: white;
+      border-color: #4A7BF7;
+    }
+
+    .qb-design-button:hover {
+      background: #353560;
+      border-color: #4A7BF7;
+    }
+
+    .qb-design-item.selected .qb-design-button:hover {
+      background: #3a6ae6;
+    }
+
+    .qb-button-group {
+      display: flex;
+      gap: 12px;
+      padding: 14px 20px;
+      border-top: 1px solid #2a2a4a;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 800px;
+      background: #1e1e36;
+      z-index: 100;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+    }
+
+    .qb-button {
+      flex: 1;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .qb-button-primary {
+      background: #4A7BF7;
+      color: white;
+    }
+
+    .qb-button-primary:hover {
+      background: #3a6ae6;
+    }
+
+    .qb-button-primary:disabled {
+      background: #3a3a5c;
+      color: #6a6a88;
+      cursor: not-allowed;
+    }
+
+    .qb-button-secondary {
+      background: #242442;
+      color: #4A7BF7;
+      border: 1px solid #4A7BF7;
+    }
+
+    .qb-button-secondary:hover {
+      background: #2a2a50;
+    }
+
+    .qb-input-group {
+      margin-bottom: 16px;
+    }
+
+    .qb-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #c0c0d0;
+      font-size: 16px;
+    }
+
+    .qb-label-optional {
+      color: #7a7a98;
+      font-weight: normal;
+    }
+
+    .qb-label-required::after {
+      content: ' *';
+      color: #ef4444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #353560;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #242442;
+      color: #e8e8ec;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #4A7BF7;
+      box-shadow: 0 0 0 3px rgba(74,123,247,0.15);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .qb-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .qb-checkbox input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .qb-checkbox-label {
+      flex: 1;
+      font-size: 16px;
+      cursor: pointer;
+      color: #c0c0d0;
+    }
+
+    .qb-price-bar {
+      position: fixed;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 800px;
+      background: #ffffff;
+      border-top: 2px solid #4A7BF7;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+    }
+
+    .qb-price-info {
+      display: flex;
+      gap: 36px;
+    }
+
+    .qb-price-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .qb-price-label {
+      font-size: 12px;
+      color: #888;
+      font-weight: 500;
+    }
+
+    .qb-price-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #111;
+    }
+
+    .qb-total-price {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: right;
+    }
+
+    .qb-total-label {
+      font-size: 12px;
+      color: #4A7BF7;
+      font-weight: 600;
+    }
+
+    .qb-total-value {
+      font-size: 34px;
+      font-weight: 900;
+      color: #4A7BF7;
+      letter-spacing: -0.5px;
+    }
+
+    .qb-zoom-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .qb-zoom-overlay.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qb-zoom-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .qb-zoom-image-container {
+      position: relative;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-height: 70vh;
+    }
+
+    .qb-zoom-image {
+      max-width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+    }
+
+    .qb-zoom-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+
+    .qb-zoom-close:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .qb-zoom-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 11;
+    }
+
+    .qb-zoom-nav:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .qb-zoom-nav.prev {
+      left: 16px;
+    }
+
+    .qb-zoom-nav.next {
+      right: 16px;
+    }
+
+    .qb-zoom-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .qb-zoom-select-btn {
+      padding: 12px 32px;
+      background: #2B4C8C;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .qb-zoom-select-btn:hover {
+      background: #1a3570;
+    }
+
+    .qb-confirmation {
+      background: #242442;
+      border: 1px solid #353560;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .qb-confirmation-row {
+      display: flex;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid #2a2a4a;
+      align-items: center;
+    }
+
+    .qb-confirmation-row:last-child {
+      border-bottom: none;
+    }
+
+    .qb-confirmation-label {
+      min-width: 120px;
+      font-weight: 600;
+      color: #7a7a98;
+      font-size: 15px;
+    }
+
+    .qb-confirmation-value {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .qb-confirmation-image {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      background: #1e1e38;
+      object-fit: cover;
+      border: 1px solid #353560;
+    }
+
+    .qb-confirmation-text {
+      flex: 1;
+      color: #e8e8ec;
+      font-size: 16px;
+    }
+
+    .qb-confirmation-edit {
+      padding: 4px 12px;
+      background: #2a2a50;
+      border: 1px solid #353560;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #4A7BF7;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .qb-confirmation-edit:hover {
+      background: #353560;
+    }
+
+    .qb-summary {
+      background: #242442;
+      border: 1px solid #353560;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .qb-summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .qb-summary-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .qb-summary-label {
+      color: #7a7a98;
+    }
+
+    .qb-summary-value {
+      font-weight: 600;
+      color: #e8e8ec;
+      text-align: right;
+    }
+
+    .qb-summary-total {
+      padding-top: 12px;
+      border-top: 2px solid #353560;
+      margin-top: 12px;
+    }
+
+    .qb-summary-total .qb-summary-value {
+      font-size: 22px;
+      color: #4A7BF7;
+    }
+
+    .qb-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .qb-modal.active {
+      display: flex;
+    }
+
+    .qb-modal-content {
+      background: #242442;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .qb-modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .qb-modal-message {
+      font-size: 14px;
+      color: #9ca3b8;
+      margin-bottom: 20px;
+    }
+
+    .qb-modal-amount {
+      font-size: 28px;
+      font-weight: 700;
+      color: #4A7BF7;
+      margin-bottom: 20px;
+    }
+
+    .qb-modal-button {
+      width: 100%;
+      padding: 14px;
+      background: #4A7BF7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .qb-modal-button:hover {
+      background: #3a6ae6;
+    }
+
+    /* ── 태블릿 (768px 이하) ── */
+    @media (max-width: 768px) {
+      .qb-container { padding: 16px; }
+      .qb-header { margin-bottom: 16px; padding-bottom: 14px; }
+      .qb-step-title { font-size: 26px; }
+      .qb-step-subtitle { font-size: 14px; }
+
+      .qb-series-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .qb-series-name { font-size: 16px; }
+      .qb-series-desc { font-size: 13px; }
+      .qb-design-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+      .qb-card { flex-direction: row !important; }
+      .qb-card img { width: 70px !important; height: 70px !important; flex-shrink: 0; }
+      .qb-card-title { font-size: 17px; }
+      .qb-card-desc { font-size: 14px; }
+
+      .qb-progress-step { width: 24px; height: 24px; font-size: 11px; }
+      .qb-progress-line { margin-top: 12px; }
+      .qb-progress-label { font-size: 9px; }
+
+      .qb-button-group { max-width: 100%; padding: 12px 16px; }
+      .qb-button { font-size: 15px; padding: 12px 20px; }
+      .qb-price-bar { padding: 10px 16px; }
+      .qb-price-value { font-size: 17px; }
+      .qb-total-value { font-size: 26px; }
+
+      .qb-detail-overlay { padding: 0; }
+      .qb-detail-wrap { max-width: 100%; height: 100vh; border-radius: 0; }
+      .qb-zoom-content { max-width: 100vw; }
+      .qb-zoom-image-container { max-height: 60vh; }
+      .qb-zoom-image { max-height: 60vh; }
+      .qb-zoom-nav { width: 36px; height: 36px; font-size: 18px; }
+      .qb-zoom-footer { flex-direction: column; gap: 8px; }
+
+      .qb-confirmation-row { flex-direction: column; gap: 6px; }
+      .qb-confirmation-label { min-width: auto; }
+    }
+
+    /* ── 모바일 (480px 이하) ── */
+    @media (max-width: 480px) {
+      .qb-container { padding: 10px; }
+      .qb-header { margin-bottom: 10px; padding-bottom: 10px; }
+      .qb-logo-img { height: 26px; }
+
+      .qb-step-title { font-size: 20px; }
+      .qb-step-subtitle { font-size: 12px; margin-bottom: 20px; }
+
+      .qb-series-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .qb-series-image { aspect-ratio: 1; }
+      .qb-series-info { padding: 8px; }
+      .qb-series-name { font-size: 13px; }
+      .qb-series-desc { font-size: 11px; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+      .qb-series-meta { font-size: 10px; }
+      .qb-series-group-title { font-size: 13px; margin-bottom: 10px; }
+      .qb-detail-btn { font-size: 10px; padding: 3px 8px; }
+
+      .qb-design-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+      .qb-card { padding: 10px !important; gap: 10px !important; }
+      .qb-card img { width: 56px !important; height: 56px !important; border-radius: 6px !important; }
+      .qb-card-title { font-size: 15px; }
+      .qb-card-desc { font-size: 12px; }
+
+      .qb-progress { padding: 6px 0 10px; }
+      .qb-progress-step { width: 18px; height: 18px; font-size: 9px; }
+      .qb-progress-line { margin-top: 9px; min-width: 3px; height: 1.5px; }
+      .qb-progress-label { font-size: 7px; }
+
+      .qb-button-group { flex-direction: column; padding: 10px; gap: 8px; }
+      .qb-button { font-size: 14px; padding: 11px 16px; }
+
+      .qb-price-bar { padding: 8px 10px; bottom: 90px; }
+      .qb-price-info { gap: 16px; }
+      .qb-price-label { font-size: 10px; }
+      .qb-price-value { font-size: 14px; }
+      .qb-total-label { font-size: 10px; }
+      .qb-total-value { font-size: 20px; }
+
+      .qb-step-content.active { padding-bottom: 180px; }
+
+      .qb-label { font-size: 14px; }
+      .qb-checkbox-label { font-size: 14px; }
+      .qb-confirmation-text { font-size: 14px; }
+      .qb-summary-row { font-size: 14px; }
+      .qb-summary-total .qb-summary-value { font-size: 18px; }
+
+      .qb-modal-content { padding: 28px 20px; }
+      .qb-modal-title { font-size: 18px; }
+      .qb-modal-amount { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="qb-container">
+    <div class="qb-header">
+      <div class="qb-logo">
+        <img src="https://www.hanasignmall.kr/image/common/hana_logo2.png" alt="" class="qb-logo-img" id="qb-logo-real">
+        <div class="qb-logo-fallback" id="qb-logo-fb"><div class="qb-logo-mark">H</div><span class="qb-logo-brand">하나사인몰</span></div>
+      </div>
+    </div>
+    <div id="qb-progress" class="qb-progress"></div>
+
+    <noscript><div style="background:#ff4444;color:#fff;padding:20px;border-radius:8px;margin:20px 0;font-size:16px">자바스크립트가 비활성화되어 있습니다. 브라우저 설정에서 자바스크립트를 활성화해주세요.</div></noscript>
+    <div id="qb-error" style="display:none;background:#ff4444;color:#fff;padding:16px;border-radius:8px;margin:10px 0;font-size:14px;word-break:break-all"></div>
+
+    <!-- STEP 1: Series Selection -->
+    <div id="qb-step-1" class="qb-step-content active">
+      <h1 class="qb-step-title">어떤 게시판을 찾고 계세요?</h1>
+      <p class="qb-step-subtitle">시리즈별 특징을 확인하고 선택해주세요</p>
+
+      <div class="qb-series-group">
+        <div class="qb-series-group-title">주력 게시판</div>
+        <div class="qb-series-grid" id="qb-main-series"></div>
+      </div>
+
+      <div class="qb-series-group">
+        <div class="qb-series-group-title">특수 게시판</div>
+        <div class="qb-series-grid" id="qb-special-series"></div>
+      </div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-primary" id="qb-step1-next" disabled>다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Size Selection -->
+    <div id="qb-step-2" class="qb-step-content">
+      <h1 class="qb-step-title">구수를 선택해주세요</h1>
+      <p class="qb-step-subtitle">게시판의 크기를 선택하면 가격이 표시됩니다</p>
+
+      <div id="qb-sizes-container"></div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step2-next" disabled>다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Type Selection (Conditional) -->
+    <div id="qb-step-3" class="qb-step-content">
+      <h1 class="qb-step-title">타입을 선택해주세요</h1>
+      <p class="qb-step-subtitle">포켓형, 집게형, 덮개형 중 선택하세요</p>
+
+      <div id="qb-types-container"></div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step3-next" disabled>다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Ad Panel Selection (Conditional) -->
+    <div id="qb-step-4" class="qb-step-content">
+      <h1 class="qb-step-title">광고면 옵션을 선택해주세요</h1>
+      <p class="qb-step-subtitle">상단, 하단, 또는 광고면 없이 선택 가능합니다</p>
+
+      <div id="qb-ad-panels-container"></div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step4-next" disabled>다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: Design Selection (Conditional) -->
+    <div id="qb-step-5" class="qb-step-content">
+      <h1 class="qb-step-title">디자인을 선택해주세요</h1>
+      <p class="qb-step-subtitle">이미지를 클릭하여 자세히 보고, 선택 버튼을 눌러 확정하세요</p>
+
+      <div id="qb-design-category-tabs"></div>
+      <div id="qb-design-grid" class="qb-design-grid"></div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step5-next" disabled>다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 6: Addons (Conditional) -->
+    <div id="qb-step-6" class="qb-step-content">
+      <h1 class="qb-step-title">추가옵션을 선택해주세요</h1>
+      <p class="qb-step-subtitle">필요한 추가옵션을 선택하세요 (선택 사항)</p>
+
+      <div id="qb-addons-container"></div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step6-next">다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 7: Request Notes -->
+    <div id="qb-step-7" class="qb-step-content">
+      <h1 class="qb-step-title">요청사항을 입력해주세요</h1>
+      <p class="qb-step-subtitle">배송 및 제작 시 특별한 요청사항이 있으면 입력하세요</p>
+
+      <div id="qb-notes-container">
+        <div class="qb-input-group">
+          <label class="qb-label">특별 요청사항</label>
+          <textarea id="qb-notes" placeholder="예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등..."></textarea>
+        </div>
+      </div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step7-next">다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 8: Customer Info -->
+    <div id="qb-step-8" class="qb-step-content">
+      <h1 class="qb-step-title">주문자 정보를 입력해주세요</h1>
+      <p class="qb-step-subtitle">스마트스토어 주문과 매칭하기 위해 필요합니다. 입력하신 정보는 주문 확인 용도로만 사용됩니다.</p>
+
+      <div id="qb-customer-info-form">
+        <div class="qb-input-group">
+          <label class="qb-label qb-label-required">주문자명</label>
+          <input type="text" id="qb-name" placeholder="예: 홍길동" required oninput="qb_checkCustomerForm()">
+        </div>
+
+        <div class="qb-input-group">
+          <label class="qb-label qb-label-required">연락처</label>
+          <input type="tel" id="qb-phone" placeholder="010-0000-0000" required oninput="qb_checkCustomerForm()">
+        </div>
+      </div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step8-next" disabled>다음 단계</button>
+      </div>
+    </div>
+
+    <!-- STEP 9: Final Confirmation -->
+    <div id="qb-step-9" class="qb-step-content">
+      <h1 class="qb-step-title">주문 내용을 확인하세요</h1>
+      <p class="qb-step-subtitle">모든 정보가 올바른지 확인 후 주문을 접수하세요</p>
+
+      <div id="qb-confirmation-container" class="qb-confirmation"></div>
+
+      <div class="qb-summary">
+        <div class="qb-summary-row">
+          <span class="qb-summary-label">상품가</span>
+          <span class="qb-summary-value" id="qb-summary-product">0원</span>
+        </div>
+        <div class="qb-summary-row" id="qb-summary-ad-row" style="display: none;">
+          <span class="qb-summary-label">광고면</span>
+          <span class="qb-summary-value" id="qb-summary-ad">0원</span>
+        </div>
+        <div class="qb-summary-row" id="qb-summary-addons-row" style="display: none;">
+          <span class="qb-summary-label">추가옵션</span>
+          <span class="qb-summary-value" id="qb-summary-addons">0원</span>
+        </div>
+        <div class="qb-summary-row">
+          <span class="qb-summary-label">배송비</span>
+          <span class="qb-summary-value" id="qb-summary-shipping">0원</span>
+        </div>
+        <div class="qb-summary-row qb-summary-total">
+          <span class="qb-summary-label">총 결제 예정금액</span>
+          <span class="qb-summary-value" id="qb-summary-total">0원</span>
+        </div>
+      </div>
+
+      <div class="qb-button-group">
+        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
+        <button class="qb-button qb-button-primary" id="qb-step9-submit">주문 접수</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom Overlay -->
+  <div id="qb-zoom-overlay" class="qb-zoom-overlay">
+    <div class="qb-zoom-content">
+      <div class="qb-zoom-image-container">
+        <img id="qb-zoom-image" class="qb-zoom-image" src="" alt="">
+        <button class="qb-zoom-close" onclick="qb_closeZoom()">×</button>
+        <button class="qb-zoom-nav prev" id="qb-zoom-prev" onclick="qb_prevDesign()">‹</button>
+        <button class="qb-zoom-nav next" id="qb-zoom-next" onclick="qb_nextDesign()">›</button>
+      </div>
+      <div class="qb-zoom-footer">
+        <button class="qb-zoom-select-btn" onclick="qb_selectFromZoom()">이 디자인 선택</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="qb-success-modal" class="qb-modal">
+    <div class="qb-modal-content">
+      <h2 class="qb-modal-title">주문이 접수되었습니다!</h2>
+      <p class="qb-modal-message">아래 금액으로 스마트스토어에서 결제해주세요</p>
+      <div class="qb-modal-amount" id="qb-modal-amount">0원</div>
+      <button class="qb-modal-button" onclick="qb_newOrder()">닫고 스마트스토어 결제하기</button>
+    </div>
+  </div>
+
+  <!-- 상세페이지 뷰어 모달 -->
+  <div id="qb-detail-modal" class="qb-detail-overlay" onclick="if(event.target===this)qb_closeDetail()">
+    <div class="qb-detail-wrap">
+      <div class="qb-detail-header">
+        <span id="qb-detail-title">상세페이지</span>
+        <button class="qb-detail-close" onclick="qb_closeDetail()">✕</button>
+      </div>
+      <div id="qb-detail-body" class="qb-detail-body">
+        <div id="qb-detail-loading" class="qb-detail-loading">상세페이지를 불러오는 중...</div>
+        <div id="qb-detail-content" class="qb-detail-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qb-price-bar" id="qb-price-bar">
+    <div class="qb-price-info">
+      <div class="qb-price-item">
+        <div class="qb-price-label">상품가</div>
+        <div class="qb-price-value" id="qb-price-product">0원</div>
+      </div>
+      <div class="qb-price-item">
+        <div class="qb-price-label">배송비</div>
+        <div class="qb-price-value" id="qb-price-shipping">0원</div>
+      </div>
+    </div>
+    <div class="qb-total-price">
+      <div class="qb-total-label">총 예정 금액</div>
+      <div class="qb-total-value" id="qb-price-total">0원</div>
+    </div>
+  </div>
+
+  <script>
+  /* 진단: 이 스크립트가 보이면 JS는 실행됨 */
+  (function(){
+    var e=document.getElementById('qb-error');
+    if(e){e.style.display='block';e.style.background='#ff8800';e.textContent='[진단] JS 실행 확인됨. 메인 스크립트 로딩 중...';}
+  })();
+  </script>
+  <script>
+    window.onerror = function(msg, url, line, col, err) {
+      var el = document.getElementById('qb-error');
+      if (el) { el.style.display = 'block'; el.textContent = 'Error: ' + msg + ' (line ' + line + ')'; }
+      return false;
+    };
+    const IMG_BASE = 'https://www.hanasignmall.kr/gsfiles_room';
+    const HGODO = 'https://hanasigm.hgodo.com/';
+
+    // 상세페이지 에디터 영역 이미지 캐시 (프로토타입용)
+    const DETAIL_CACHE = {
+      "슬림업": ["hs16447523/notice/summer_vacation.jpg","hs16447523/notice/board_top.jpg","hana4030/board/slim/update.jpg","hana4030/board/2024/slim_up/all/line.jpg","hana4030/board/2024/slim_up/all/01.jpg","hana4030/board/2024/slim_up/all/01-1.jpg","hana4030/board/2024/slim_up/all/02.jpg","hana4030/board/2024/slim_up/all/03.jpg","hana4030/board/2024/slim_up/all/04.jpg","hana4030/board/2024/slim_up/all/05.gif","hana4030/board/2024/slim_up/all/06.gif","hana4030/board/2024/slim_up/all/07.jpg","hana4030/board/2024/slim_up/all/08.jpg","hana4030/board/2024/slim_up/all/09.gif","hana4030/board/2024/slim_up/all/09-2.gif","hana4030/board/2024/slim_up/all/09-3.gif","hana4030/board/2024/slim_up/all/09-4.gif","hana4030/board/2024/slim_up/all/10.gif","hana4030/board/2024/slim_up/all/11.gif","hana4030/board/2024/slim_up/all/12.gif","hana4030/board/2024/slim_up/all/13.jpg","hana4030/board/2024/slim_up/all/14.gif","hana4030/board/2024/slim_up/all/15.jpg","hana4030/board/2024/slim_up/all/16.jpg","hana4030/board/2024/slim_up/all/17.jpg","hana4030/board/2024/slim_up/all/18.jpg","hana4030/board/2024/slim_up/all/19.jpg","hana4030/board/2024/slim_up/all/20.jpg","hana4030/board/2024/slim_up/all/21.jpg","hana4030/board/2024/slim_up/all/22.jpg","hana4030/board/2024/slim_up/all/23.jpg","hana4030/board/2024/slim_up/all/24.gif","hana4030/board/2024/slim_up/all/25.jpg"],
+      "슬림디자인": ["hs16447523/notice/board_review.jpg","hana4030/board/slim/update.jpg","hana4030/board/slim/1/01.jpg","hana4030/board/slim/1/01-1.jpg","hana4030/board/slim/1/02.jpg","hana4030/board/slim/1/03.jpg","hana4030/board/slim/1/05.jpg","hana4030/board/slim/gif/06.gif","hana4030/board/slim/1/07.jpg","hana4030/board/slim/1/08.jpg","hana4030/board/slim/1/09.jpg","hana4030/board/slim/1/10.jpg","hana4030/board/slim/1/11.jpg","hana4030/board/slim/1/12.jpg","hana4030/board/slim/gif/13.gif","hana4030/board/slim/1/14.jpg","hana4030/board/slim/gif/15.gif","hana4030/board/slim/1/16.jpg","hana4030/board/slim/1/17.jpg","hana4030/board/slim/1/18.jpg","hs16447523/notice/quantity_info4.jpg","hana4030/board/slim/1/19.jpg","hana4030/board/slim/1/sample_1_02.jpg","hana4030/board/slim/1/sample_1_03.jpg","hana4030/board/slim/1/sample_1_04.jpg","hana4030/board/slim/1/sample_1_05.jpg","hana4030/board/slim/1/sample_1_06.jpg","hana4030/board/slim/1/sample_1_07.jpg","hana4030/board/slim/1/sample_1_08.jpg","hana4030/board/slim/1/sample_1_09.jpg","hana4030/board/slim/1/20.jpg","hana4030/board/slim/1/21.jpg","hana4030/board/slim/1/22.jpg","hana4030/board/slim/1/23.jpg","hana4030/board/slim/1/24.jpg"],
+      "안전강화유리": ["hs16447523/notice/board_top.jpg","hs16447523/notice/tempered_glass_info.jpg","hs16447523/notice/total_main_01.jpg","hs16447523/board/2021/gangwha/all/01.jpg","hs16447523/board/2021/gangwha/all/02.jpg","hs16447523/board/2021/03_boardgong.jpg","hs16447523/board/2021/gangwha/01/04.jpg","hs16447523/board/2021/gangwha/06.jpg","hs16447523/notice/makeorder_03.jpg","hs16447523/board/2021/gangwha/01/07.jpg","hs16447523/board/2021/gangwha/08.jpg","hs16447523/board/2021/gangwha/all/08.jpg","hs16447523/board/2021/gangwha/all/09.jpg"],
+      "디자인": ["hs16447523/notice/board_top.jpg","hs16447523/notice/total_main_01.jpg","hs16447523/board/2021/alumin/06/01.jpg","hs16447523/board/2021/alumin/06/02.jpg","hs16447523/board/2021/03_boardgong.jpg","hs16447523/board/2021/alumin/04.jpg","hs16447523/board/2021/alumin/05.jpg","hs16447523/board/2021/alumin/06.jpg","hs16447523/notice/makeorder_03.jpg","hs16447523/board/2021/alumin/06/07.jpg","hs16447523/board/2021/alumin/08.jpg","hs16447523/board/2021/alumin/06/11.jpg","hs16447523/notice/board_sale.jpg"],
+      "크리스탈": ["hs16447523/notice/board_top.jpg","hs16447523/notice/tempered_glass_info.jpg","hs16447523/notice/total_main_01.jpg","hs16447523/board/2021/crystal/all/01.jpg","hs16447523/board/2021/crystal/all/01-1.jpg","hs16447523/board/2021/crystal/all/02.jpg","hs16447523/board/2021/03_boardgong.jpg","hs16447523/board/2021/crystal/all/04.jpg","hs16447523/board/2021/crystal/05.gif","hs16447523/board/2021/crystal/06.jpg","hs16447523/notice/makeorder_03.jpg","hs16447523/board/2021/crystal/01/07.jpg","hs16447523/board/2021/crystal/08.jpg","hs16447523/board/2021/crystal/all/09.jpg","hs16447523/board/2021/crystal/all/10.jpg","hs16447523/notice/board_sale.jpg"],
+      "아크릴": ["hs16447523/notice/board_top.jpg","hs16447523/board/2021/acril/line.jpg","hs16447523/notice/hana_10_ga.jpg","hs16447523/board/2021/acril/02.jpg","hs16447523/board/2021/acril/03.jpg","hs16447523/board/2021/acril/04.jpg","hs16447523/board/2021/acril/05.jpg","hs16447523/board/2021/acril/06.jpg","hs16447523/board/2021/acril/07.jpg","hs16447523/board/2021/acril/08.jpg","hs16447523/board/2021/acril/09.jpg","hs16447523/board/2021/acril/10.jpg","hs16447523/board/2021/acril/11.jpg","hs16447523/board/2021/acril/12.jpg","hs16447523/board/2021/acril/13.jpg","hs16447523/board/2021/acril/14.jpg"],
+      "슬림자석": ["hs16447523/notice/board_top.jpg","hs16447523/notice/hana_10_ga.jpg","hs16447523/board/2021/magnet/line.jpg","hs16447523/board/2021/magnet/00_1.jpg","hs16447523/board/2021/magnet/01.jpg","hs16447523/board/2021/magnet/02.jpg","hs16447523/board/2021/magnet/03.jpg","hs16447523/board/2021/magnet/04.jpg","hs16447523/board/2021/magnet/04-01.gif","hs16447523/board/2021/magnet/05.jpg","hs16447523/board/2021/magnet/06.jpg","hs16447523/board/2021/magnet/07.jpg","hs16447523/board/2021/magnet/08.jpg","hs16447523/board/2021/magnet/09.jpg","hs16447523/board/2021/magnet/11.jpg","hs16447523/board/2021/magnet/12.jpg","hs16447523/board/2021/magnet/13.jpg","hs16447523/board/2021/magnet/14.jpg","hs16447523/board/2021/magnet/15-mo.jpg","hs16447523/board/2021/magnet/15_05.gif","hs16447523/board/2021/magnet/16.jpg","hs16447523/board/2021/magnet/17.jpg","hs16447523/board/2021/magnet/18.jpg"],
+      "우드": ["hs16447523/notice/board_top.jpg","hs16447523/notice/total_main_01.jpg","hs16447523/board/2021/wood/06/01.jpg","hs16447523/board/2021/wood/06/02.jpg","hs16447523/board/2021/03_boardgong.jpg","hs16447523/board/2021/wood/04.jpg","hs16447523/board/2021/wood/05.jpg","hs16447523/board/2021/wood/06.jpg","hs16447523/notice/makeorder_03.jpg","hs16447523/board/2021/wood/06/07.jpg","hs16447523/board/2021/wood/06/08.jpg","hs16447523/board/2021/wood/06/09.jpg","hs16447523/board/2021/wood/06/10.jpg","hs16447523/board/2021/wood/09.jpg","hs16447523/board/2021/wood/06/13.jpg","hs16447523/notice/board_sale.jpg"],
+      "알루미늄": ["hs16447523/notice/board_top.jpg","hs16447523/notice/total_main_01.jpg","hs16447523/board/2021/alumin/all/01.jpg","hs16447523/board/2021/alumin/all/02.jpg","hs16447523/board/2021/03_boardgong.jpg","hs16447523/board/2021/alumin/04.jpg","hs16447523/board/2021/alumin/05.jpg","hs16447523/board/2021/alumin/06.jpg","hs16447523/notice/makeorder_03.jpg","hs16447523/board/2021/alumin/01/07.jpg","hs16447523/board/2021/alumin/08.jpg","hs16447523/board/2021/alumin/all/09.jpg","hs16447523/board/2021/alumin/all/10.jpg","hs16447523/notice/board_sale.jpg"],
+      "슬림안전보건": ["hs16447523/notice/summer_vacation.jpg","hs16447523/notice/board_top.jpg","hana4030/board/slim/update.jpg","hana4030/board/slim/safebogun/01.jpg","hana4030/board/slim/1/01-1.jpg","hana4030/board/slim/safebogun/02.jpg","hana4030/board/slim/safebogun/03.jpg","hana4030/board/slim/safebogun/04.jpg","hana4030/board/slim/safebogun/05.jpg","hana4030/board/slim/safebogun/06.jpg","hana4030/board/slim/1/12.jpg","hana4030/board/slim/gif/13.gif","hana4030/board/slim/1/14.jpg","hana4030/board/slim/gif/15.gif","hana4030/board/slim/safebogun/07.jpg","hana4030/board/slim/safebogun/08.jpg","hana4030/board/slim/safebogun/09.jpg","hana4030/board/slim/safebogun/10.jpg","hana4030/board/slim/safebogun/11.jpg","hana4030/board/slim/1/22.jpg","hana4030/board/slim/1/23.jpg","hana4030/board/slim/safebogun/12.jpg"],
+      "산업안전보건": ["hs16447523/notice/board_review.jpg","hs16447523/board/2025/safetyhealth/01.jpg","hs16447523/board/2025/safetyhealth/02.jpg","hs16447523/board/2025/safetyhealth/03.jpg","hs16447523/board/2025/safetyhealth/04.jpg","hs16447523/board/2025/safetyhealth/05.gif","hs16447523/board/2025/safetyhealth/06.gif","hs16447523/board/2025/safetyhealth/07.jpg","hs16447523/board/2025/safetyhealth/08.jpg","hs16447523/board/2025/safetyhealth/09-2.gif","hs16447523/board/2025/safetyhealth/09-3.gif","hs16447523/board/2025/safetyhealth/09-4.gif","hs16447523/board/2025/safetyhealth/09.gif","hs16447523/board/2025/safetyhealth/10.gif","hs16447523/board/2025/safetyhealth/11.gif","hs16447523/board/2025/safetyhealth/12.jpg","hs16447523/board/2025/safetyhealth/13.gif","hs16447523/board/2025/safetyhealth/14.jpg","hs16447523/board/2025/safetyhealth/15.jpg","hs16447523/board/2025/safetyhealth/16.jpg","hs16447523/board/2025/safetyhealth/17.jpg","hs16447523/board/2025/safetyhealth/18.jpg","hs16447523/board/2025/safetyhealth/19.gif","hs16447523/board/2025/safetyhealth/20.jpg"],
+      "갈바": ["hs16447523/notice/fireparking_.jpg","hs16447523/board/noticeboard/galba/01.jpg","hs16447523/board/noticeboard/galba/02.jpg","hs16447523/board/noticeboard/galba/03.jpg","hs16447523/notice/board_sale.jpg","hs16447523/notice/order.jpg","hs16447523/notice/total_bottom_01.jpg"]
+    };
+
+    // 각 시리즈별 3구 상품 이미지 (3구 없는 경우 최소 규격)
+    const SERIES_IMAGES = {
+      "슬림업": IMG_BASE + "/2025/03/28/d11eb32e0e2f8c20fd8a7eeb8981b92d59124c40.jpg",
+      "슬림디자인": IMG_BASE + "/2024/05/31/7e352cd47a19d39b5f6d0b64dec466dbd1e93e6b.jpg",
+      "안전강화유리": IMG_BASE + "/2025/10/02/e3cf36cd66d061a750f59c6e3225a752fed87011.jpg",
+      "디자인": IMG_BASE + "/2025/03/28/6d87f99f7310a7929db6e5c9cc84284c7025d81e.jpg",
+      "크리스탈": IMG_BASE + "/2025/10/01/6cbd1557c575ac2569b509ca9dbb5e19ace78f6f.jpg",
+      "아크릴": IMG_BASE + "/2025/03/28/86ca43dd2977a2f90414459f15a0ae90c0465327.jpg",
+      "슬림자석": IMG_BASE + "/2025/03/28/4c1cc946d8d6fdbdf13e2cce19bf26de3d0573b3.jpg",
+      "우드": IMG_BASE + "/2025/03/28/eeb3f8f71508e9cb12753ce02ed33e13477149d1.jpg",
+      "알루미늄": IMG_BASE + "/2025/03/28/50e5d26c294e1b66a9ff6db594365f53981d633c.jpg",
+      "슬림안전보건": IMG_BASE + "/2025/01/08/3cd9f09470b8881503353f50cd0d758150a192f7.jpg",
+      "산업안전보건": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+      "갈바": IMG_BASE + "/2023/12/28/9095ca0cad1bdbf14f3cb95f695112542e073c9c.jpg"
+    };
+
+    const TYPE_IMAGES = {
+      "포켓형": IMG_BASE + "/2025/03/28/74fe229019589ea623bd5006893ed33c33e20189.jpg",
+      "집게형": IMG_BASE + "/2025/03/28/0133edaea837aedc7270d59283451b6db35fd9b7.jpg",
+      "덮개형": IMG_BASE + "/2026/02/23/278fe4836f4b4f7f192ce74b6530d7e103412de5.jpg"
+    };
+
+    // 각 시리즈별 상세페이지 URL (모음전 기준)
+    const DETAIL_PAGES = {
+      "슬림업": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=17960",
+      "슬림디자인": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=13005",
+      "안전강화유리": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=12997",
+      "디자인": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=13785",
+      "크리스탈": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=12995",
+      "아크릴": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=20760",
+      "슬림자석": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=20729",
+      "우드": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=13754",
+      "알루미늄": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=13797",
+      "슬림안전보건": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=34116",
+      "산업안전보건": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01&RgdCode=38028",
+      "갈바": "https://www.hanasignmall.kr/DisplayGoods.php?CCode=01-09&RgdCode=14012"
+    };
+
+    // 타입별 상세 설명
+    const TYPE_DESC = {
+      "포켓형": "투명 포켓에 용지를 슬라이드로 삽입하는 방식입니다. 가장 깔끔하고 보편적이며, 용지가 외부에 노출되지 않아 오염이 적습니다. A4 용지를 옆에서 밀어넣어 교체합니다.",
+      "집게형": "상단 집게로 용지를 고정하는 방식입니다. 용지 교체가 가장 빠르고 간편합니다. 게시물을 자주 바꾸는 환경에 적합합니다. 하단이 바닥면에 밀착됩니다.",
+      "덮개형": "집게형에 상단 덮개가 추가된 방식입니다. 집게 부분이 가려져 더 깔끔한 외관을 제공합니다. 하단이 바닥면에서 살짝 떠 있는 구조입니다."
+    };
+
+    // 광고면 상세 설명
+    const AD_DESC = {
+      "광고면 없음": "기본 규격(760×740mm). 게시판 본체만 사용합니다.",
+      "상단 무지": "상단에 무지 광고면 추가(760×830mm). 로고나 텍스트를 별도로 부착할 수 있는 여백 공간입니다.",
+      "상단 디자인": "상단에 디자인 광고면 추가(760×830mm). 아파트명, 기관명, 로고 등을 디자인하여 인쇄해드립니다.",
+      "하단 무지": "하단에 무지 광고면 추가(760×830mm). 하단부에 안내문구 등을 부착할 수 있는 여백 공간입니다.",
+      "하단 디자인": "하단에 디자인 광고면 추가(760×830mm). 하단부에 안내문구, 광고 등을 디자인하여 인쇄해드립니다."
+    };
+
+    const PRODUCTS = {
+      "슬림업": {
+        sizes: {"1구":{price:28000,ship:5000},"2구":{price:45000,ship:7000},"3구":{price:60000,ship:11000},"4구":{price:75000,ship:14000},"6구":{price:90000,ship:18000},"8구":{price:125000,ship:22000},"10구":{price:155000,ship:26000}},
+        hasType:true, hasAdPanel:true, hasDesign:true, designCats:"standard",
+        addons:[{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],
+        requireNote:true,
+        desc:"가장 인기 있는 슬림형. 포켓/집게/덮개 타입 선택 가능"
+      },
+      "슬림디자인": {
+        sizes: {"1구":{price:29700,ship:5000},"2구":{price:51100,ship:7000},"3구":{price:69200,ship:11000},"4구":{price:83600,ship:14000},"6구":{price:101100,ship:18000},"8구":{price:141300,ship:22000},"10구":{price:176000,ship:26000}},
+        hasType:false, hasAdPanel:true, hasDesign:true, designCats:"extended",
+        addons:[{name:"메탈스카시",price:20000},{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],
+        requireNote:true,
+        desc:"디자인 시트지 마감으로 고급스러운 외관"
+      },
+      "안전강화유리": {
+        sizes: {"1구":{price:33000,ship:5000},"2구":{price:55000,ship:7000},"4구":{price:82000,ship:14000},"6구":{price:110000,ship:18000},"8구":{price:148000,ship:22000},"10구":{price:180000,ship:26000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[],requireNote:false,
+        desc:"강화유리 포켓으로 내구성 최상"
+      },
+      "디자인": {
+        sizes: {"1구":{price:22000,ship:4000},"2구":{price:38000,ship:5000},"3구":{price:50000,ship:7000},"4구":{price:65000,ship:9000},"6구":{price:79000,ship:11000},"8구":{price:108000,ship:14000},"10구":{price:136000,ship:18000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[],requireNote:false,
+        desc:"합리적 가격의 디자인 게시판"
+      },
+      "크리스탈": {
+        sizes: {"1구":{price:35000,ship:5000},"2구":{price:66000,ship:7000},"3구":{price:90000,ship:9000},"4구":{price:110000,ship:11000},"6구":{price:138000,ship:15000},"8구":{price:190000,ship:18000},"10구":{price:240000,ship:22000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[{name:"고리추가 2개",price:2000}],requireNote:false,
+        desc:"투명 아크릴 프레임의 세련된 디자인"
+      },
+      "아크릴": {
+        sizes: {"1구":{price:60000,ship:4000},"2구":{price:105000,ship:5000},"3구":{price:155000,ship:5000},"4구":{price:170000,ship:7000},"6구":{price:205000,ship:7000},"8구":{price:285000,ship:9000},"10구":{price:360000,ship:11000},"1구 A3가로":{price:66000,ship:5000},"1구 A3세로":{price:66000,ship:5000},"2구 A3가로":{price:125000,ship:5000},"2구 A3세로":{price:125000,ship:5000},"3구 A3가로":{price:180000,ship:7000},"3구 A3세로":{price:180000,ship:7000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[],requireNote:false,
+        desc:"A4/A3 다양한 규격. 투명 아크릴 소재"
+      },
+      "슬림자석": {
+        sizes: {"1구":{price:52000,ship:5000},"2구":{price:100000,ship:7000},"3구":{price:138000,ship:9000},"4구":{price:175000,ship:11000},"6구":{price:207000,ship:14000},"8구":{price:275000,ship:18000},"10구":{price:340000,ship:22000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[{name:"아크릴포켓 추가",price:10000},{name:"자석추가 2개",price:3000}],requireNote:false,
+        desc:"자석 탈부착 방식으로 용지 교체 간편"
+      },
+      "우드": {
+        sizes: {"1구":{price:20000,ship:4000},"2구":{price:35000,ship:5000},"3구":{price:47000,ship:5000},"4구":{price:58000,ship:7000},"6구":{price:71000,ship:7000},"8구":{price:96000,ship:9000},"10구":{price:121000,ship:11000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[],requireNote:false,
+        desc:"원목 느낌의 따뜻한 분위기"
+      },
+      "알루미늄": {
+        sizes: {"1구":{price:20000,ship:4000},"2구":{price:35000,ship:5000},"3구":{price:47000,ship:5000},"4구":{price:58000,ship:7000},"6구":{price:71000,ship:7000},"8구":{price:96000,ship:9000},"10구":{price:121000,ship:11000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[],requireNote:false,
+        desc:"가벼운 알루미늄 프레임. 심플한 디자인"
+      },
+      "슬림안전보건": {
+        sizes: {"8구":{price:141300,ship:28000},"10구":{price:176000,ship:28000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],requireNote:false,
+        desc:"안전보건 법령 게시용 슬림디자인 게시판"
+      },
+      "산업안전보건": {
+        sizes: {"1구 가로":{price:72000,ship:11000},"2구 가로":{price:110000,ship:14000},"3구 가로":{price:145000,ship:18000},"4구 가로":{price:175000,ship:22000},"5구 가로":{price:210000,ship:26000},"6구 가로":{price:240000,ship:30000},"1구 세로":{price:72000,ship:11000},"2구 세로":{price:110000,ship:14000},"3구 세로":{price:145000,ship:18000},"4구 세로":{price:175000,ship:22000},"5구 세로":{price:210000,ship:26000},"6구 세로":{price:240000,ship:30000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[],requireNote:true,
+        desc:"산업안전보건법 의무 게시 전용"
+      },
+      "갈바": {
+        sizes: {"갈바게시판":{price:528000,ship:40000},"갈바프레임 게시판":{price:600000,ship:40000},"갈바프레임 주문제작":{price:700000,ship:50000}},
+        hasType:false, hasAdPanel:false, hasDesign:false,
+        addons:[],requireNote:false,
+        desc:"야외용 갈바 소재. 대형 게시판"
+      }
+    };
+
+    const AD_PANELS = [
+      {value:"광고면 없음",size:"760×740mm",price:0,icon:"✕",desc:"기본 규격(760×740mm). 게시판 본체만 사용합니다.",bg:"#f3f4f6"},
+      {value:"상단 무지",size:"760×830mm",price:10000,icon:"▢",desc:"상단에 무지 광고면 추가(760×830mm). 로고나 텍스트를 별도로 부착할 수 있는 여백 공간입니다.",bg:"#c0cbe3"},
+      {value:"상단 디자인",size:"760×830mm",price:13000,icon:"🎨",desc:"상단에 디자인 광고면 추가(760×830mm). 아파트명, 기관명, 로고 등을 디자인하여 인쇄해드립니다.",bg:"#ede9fe"},
+      {value:"하단 무지",size:"760×830mm",price:10000,icon:"▣",desc:"하단에 무지 광고면 추가(760×830mm). 하단부에 안내문구 등을 부착할 수 있는 여백 공간입니다.",bg:"#fef3c7"},
+      {value:"하단 디자인",size:"760×830mm",price:13000,icon:"🖼",desc:"하단에 디자인 광고면 추가(760×830mm). 하단부에 안내문구, 광고 등을 디자인하여 인쇄해드립니다.",bg:"#fce7f3"}
+    ];
+
+    const DESIGN_BASE = 'https://www.hanasignmall.kr/gsfiles_room/2024/05/07/';
+    const DM = {"패브릭_F01":"65b4ab4b507b663a366ffd9bbadfca032a5bdb4c.png","패브릭_F02":"e01eee2d1f6a370f9ea3d689f77446b863172b15.png","패브릭_F03":"4e1425af5ddc43dd727addfbc5be656536a67588.png","패브릭_F04":"ed17b66f0de9c6c2113c3d9958cebcec8689735d.png","패브릭_F05":"a74b7f22cf1492684feae995486bef1e988529a6.png","패브릭_F06":"74a11e4615f43fc6b231b9a463102e1293512ca3.png","패브릭_F07":"0d9b76db58123d497201ca3aa7fc86944f38d76e.png","패브릭_F08":"eeae5dd6b1f9db8587e0f506854c9519cf3999a6.png","패브릭_F09":"d35650cc05048ae292b24ef3ea58c95a231f0df6.png","아트월_A01":"14ef1c94145249e5144030b850aa93e2712ce02f.png","아트월_A02":"a493af1c0e564048a073d7c01977f0128427b9e0.png","아트월_A03":"916c698fdd80bc5ab9c60d1299d6e4b6a889f642.png","아트월_A04":"35ce086930854d763092510f0e2136c7eb5bf6ab.png","아트월_A05":"2faffeac8e129551fbdfe2505074f4bed6406e8d.png","아트월_A07":"bbb48709efae2209266699878c6ec987219428a7.png","아트월_A08":"a596918c4f5cf890973b6bf232ba6d493339caff.png","아트월_A09":"216db846ed4e7ab16b01dc8e769ead43d692524a.png","스톤마블_S01":"afb3a6c80c63aa6ef848c72091f3ad71ff675437.png","스톤마블_S02":"af2c4fa26f0519dcb3544abd4689d5d0b6a24d6d.png","스톤마블_S03":"0dae2d040327ebc34fa3b4fef39d652ce4216f5b.png","스톤마블_S04":"a81be587dc2633409e7128c69b2f44415f378f00.png","스톤마블_S05":"6865c0566496a8cfd4d4fcc6b56204b7261c5727.png","스톤마블_S06":"9868a9ed3310d11927d4075a54369d271c26bc69.png","스톤마블_S07":"09253c6dc8e4b795b7b9632089c60ee8ecb7dbf9.png","스톤마블_S08":"1bb6576a894847f062cbf4355c4777bb1307ac34.png","스톤마블_S09":"2f3702f45c1f5b7b634c36de574d482f04b45621.png","스톤마블_S10":"e0b2c3b21e62f8c14759e33be51e006fcf99b537.png","스톤마블_S11":"fe9ae85a6738e2598eef65059c0eadcc40d5c1dc.png","스톤마블_S12":"902f7a16a49af037a2a8f410077b66da6fd4f71a.png","그래픽_G01":"8aca66b80f26faf52d81546ad56ef1be584e7a92.png","그래픽_G02":"fa05859757a318a26c98ceb3879c8f529c536d64.png","그래픽_G03":"8bb17a5a37341ce16beb177623c8324084afd1ae.png","그래픽_G04":"221f751c325140aef48fc415633b676fff8c3569.png","그래픽_G05":"7060903095c601fccd139f015e667fcc636b6cfc.png","그래픽_G06":"bf9ad5bb4031685fbad4140a86e1a3af8662ab7a.png","그래픽_G07":"e6cdd184d1550dcc861a47d9dc2447417f3475b5.png","그래픽_G08":"a2d3b09020eaa92d7c65ed158012503d0533c7f4.png","그래픽_G09":"8b5fc012e5fd9f9536cf1bf8e83c6703ea1e39d4.png","그래픽_G10":"2d8e6aa5e35daec665a02d55a58095c4ce269a75.png","그래픽_G11":"e29935467e0e1ec535f1a3550e441ce62f92cef2.png","그래픽_G12":"13643a46bcab56bc99fc32f03e434b77987df334.png","그래픽_G13":"bc8fd18e647aa4d9afe4ccf6e19f7fdc70d5e321.png","그래픽_G14":"b100f40b2d723fd79add2a3cdcd8bd21667f8a7c.png","그래픽_G15":"75b759e35dd93017d08fc7b1e9ea35df136e3d3d.png","그래픽_G16":"e2679b175b1aaf10511a470316c9db32075159bb.png","네트메탈릭_M01":"e74f310c25e8a912c4718ec35aa58b64ce481cb9.png","네트메탈릭_M02":"4a38f384f020c98d8d0e4a49d92a5654395158a8.png","네트메탈릭_M03":"7e63d75ce56327a13a33d25c158cbaef587debe9.png","라인패턴_L01":"0126a723e7ff66d2d040cbb3f9d5db8ca9ee4fa0.png","라인패턴_L02":"1e665b335576773b029370c62fe7b9eceb3c9c84.png","라인패턴_L03":"1f1d0f0bba70a93dd681d01ec11a8ef97d511d3c.png","라인패턴_L04":"f9f3bc171709af07718a36a65e1947e07dc0019f.png","라인패턴_L05":"d513bd0e737ac1d7947ade2a06371a1a4ffd6f98.png","라인패턴_L06":"6fba6d522e7f8d2bf96b9557475464a3a13975fc.png","라인패턴_L07":"a5339f84ce8a9a23fd6bda4b32add856b7922a5c.png","라인패턴_L08":"ae0b1898ea648d77cf0347702028e8423442da51.png","라인패턴_L09":"4f14d6b647ee2b7424c3a1c2f1f76f9d0155c9ef.png","엔틱패턴_N01":"07e82867606dadefde56243275d984d4cda49353.png","엔틱패턴_N02":"18b180971d7ea7e61a0f68e75e40b26ad21c21e8.png","엔틱패턴_N03":"ea37f904b32bfada8e2aad2139b194a2359bcd7d.png","엔틱패턴_N04":"c5791a935e7816882e22e570187e0b85e63695fa.png","엔틱패턴_N05":"62daa729900948b64885e9f0495eeda300e24814.png","엔틱패턴_N06":"42da2ee9366f740a2c935b62944b89a8d7857d60.png","엔틱패턴_N07":"4a191b980054a611ec90f91eb90918558130bb40.png","엔틱패턴_N08":"9051533d801f85bf8df247edcacdc3595baba171.png","엔틱패턴_N09":"76f67b258f0f0a76316ae14d751936574c8b48d2.png"};
+
+    const DESIGN_CATS_STANDARD = {
+      '패브릭':['F01','F02','F03','F04','F05','F06','F07','F08','F09'],
+      '아트월':['A01','A02','A03','A04','A05','A07','A08','A09'],
+      '스톤마블':['S01','S02','S03','S04','S05','S06','S07','S08','S09','S10','S11','S12'],
+      '그래픽':['G01','G02','G03','G04','G05','G06','G07','G08','G09','G10','G11','G12','G13','G14','G15','G16'],
+      '네트메탈릭':['M01','M02','M03'],
+      '라인패턴':['L01','L02','L03','L04','L05','L06','L07','L08','L09'],
+      '엔틱패턴':['N01','N02','N03','N04','N05','N06','N07','N08','N09']
+    };
+
+    const DESIGN_CATS_EXTENDED = {
+      '클래식': Array.from({length:39},(_,i)=>'C'+String(i+1).padStart(2,'0')),
+      ...DESIGN_CATS_STANDARD
+    };
+
+    // 각 시리즈별 구수별 이미지
+    const SIZE_IMAGES = {
+      "슬림업": {
+        "1구": IMG_BASE + "/2025/03/28/93d9a084ac3336090061d0a59c4393c50e390f5d.jpg",
+        "2구": IMG_BASE + "/2025/03/28/a3956ffa5a2134c8b83ebf97e4be6c4319bc6c1e.jpg",
+        "3구": IMG_BASE + "/2025/03/28/d11eb32e0e2f8c20fd8a7eeb8981b92d59124c40.jpg",
+        "4구": IMG_BASE + "/2025/03/28/e222c97511eba61538cf1ae848974c449d86d492.jpg",
+        "6구": IMG_BASE + "/2025/03/28/0133edaea837aedc7270d59283451b6db35fd9b7.jpg",
+        "8구": IMG_BASE + "/2025/03/28/d23ac7e42bf9fc2043511a9df7d6b212be510f39.jpg",
+        "10구": IMG_BASE + "/2025/03/28/428a9bfa7753ca1dabd09e945fa25ad0fe6be230.jpg"
+      },
+      "슬림디자인": {
+        "1구": IMG_BASE + "/2025/03/28/5013774b77e57820149367e17f61bdb0093f8a6b.jpg",
+        "2구": IMG_BASE + "/2024/05/31/1a0bc12c0d34c5cc7c14b85a88ebc1c6ea8797b3.jpg",
+        "3구": IMG_BASE + "/2024/05/31/7e352cd47a19d39b5f6d0b64dec466dbd1e93e6b.jpg",
+        "4구": IMG_BASE + "/2024/05/31/d5f5f820eb761beb2156fb76c01f2d14cf5e2d09.jpg",
+        "6구": IMG_BASE + "/2024/05/31/d1284e5ab3024c2573f75194322cbcae8f7fbfdb.jpg",
+        "8구": IMG_BASE + "/2024/05/31/8c1c9828d3b27a0c7c89d3913bf45e97b1066c0d.jpg",
+        "10구": IMG_BASE + "/2024/05/31/96f4faa93cee4e3bd41668f025c57dbd5111a2dd.jpg"
+      },
+      "안전강화유리": {
+        "1구": IMG_BASE + "/2025/10/02/167f785cbab349761127018fe0c096c12c84254e.jpg",
+        "2구": IMG_BASE + "/2025/10/02/a904d368c3e14c8af2afe421cc48919e50198a41.jpg",
+        "3구": IMG_BASE + "/2025/10/02/e3cf36cd66d061a750f59c6e3225a752fed87011.jpg",
+        "4구": IMG_BASE + "/2025/10/02/c7bbb57eee0595ffac11b2e6fea242af88a438e5.jpg",
+        "6구": IMG_BASE + "/2025/10/02/c3684cac37b09f22b0b40033427a1a748ad213b7.jpg",
+        "8구": IMG_BASE + "/2025/10/02/1339ee1612ae91bbc0f7416c46cbf709cff6575e.jpg",
+        "10구": IMG_BASE + "/2025/10/02/feede687f0dbc129065169378e8a9bc27f4afecd.jpg"
+      },
+      "디자인": {
+        "1구": IMG_BASE + "/2025/03/28/b46e8408acd51cd3f51ff6c26cc59a5e6a7a8469.jpg",
+        "2구": IMG_BASE + "/2025/03/28/9db135055ea6b0874f603fce9fe71a06da627b56.jpg",
+        "3구": IMG_BASE + "/2025/03/28/6d87f99f7310a7929db6e5c9cc84284c7025d81e.jpg",
+        "4구": IMG_BASE + "/2025/03/28/41df5d9ee041661fc022dabe9b81e92b521315c9.jpg",
+        "6구": IMG_BASE + "/2025/03/28/aaad8dfc926c94dcca566188346f565569d39a17.jpg",
+        "8구": IMG_BASE + "/2025/03/28/9315e70818df01d834a9c2717738dda7ed2325ac.jpg",
+        "10구": IMG_BASE + "/2025/03/28/6a1d0cdda594894b35c2e61fb38dde6137775abd.jpg"
+      },
+      "크리스탈": {
+        "1구": IMG_BASE + "/2025/10/01/3ac38ed84eb60e6e4aa5dae459d40c1eda6604d4.jpg",
+        "2구": IMG_BASE + "/2025/10/01/5d0d71073a451c3ebef2873fc5b6dba45ef9ad92.jpg",
+        "3구": IMG_BASE + "/2025/10/01/6cbd1557c575ac2569b509ca9dbb5e19ace78f6f.jpg",
+        "4구": IMG_BASE + "/2025/10/01/3d780fab8639f29bd64e3aa01e14829323774e01.jpg",
+        "6구": IMG_BASE + "/2025/10/01/edb579ae7fdfe1ee8ad6b3e0fa8d3f4929c80b91.jpg",
+        "8구": IMG_BASE + "/2025/10/01/5bf3f6f89a987e4b123bb968354b5e0ccd03c525.jpg",
+        "10구": IMG_BASE + "/2025/10/01/44f8f8eb3a68157612a28216425d7742c3844f4c.jpg"
+      },
+      "아크릴": {
+        "1구": IMG_BASE + "/2025/03/28/61a825459f6b136b8d7638a2d4443c7291937eca.jpg",
+        "1구 A3가로": IMG_BASE + "/2025/03/28/0d1dc11920f423ed496f4e8032e93ea0774e32fa.jpg",
+        "1구 A3세로": IMG_BASE + "/2025/03/28/0e752fba1f498172b85e4b127be737a41a09aa29.jpg",
+        "2구": IMG_BASE + "/2025/03/28/e7c1d5183c0d740d665d9060e4430efb57b56cb5.jpg",
+        "2구 A3가로": IMG_BASE + "/2024/05/07/dd5c0740f750ed8a2e068a603d581dc929000c1c.jpg",
+        "2구 A3세로": IMG_BASE + "/2025/03/28/eadc06bf555def8f3c1ca2a44b27f1e70fea95c8.jpg",
+        "3구": IMG_BASE + "/2025/03/28/86ca43dd2977a2f90414459f15a0ae90c0465327.jpg",
+        "3구 A3가로": IMG_BASE + "/2025/03/28/24bc940cf6865781181ca2ead06fa27ba144aaee.jpg",
+        "3구 A3세로": IMG_BASE + "/2025/03/28/2b8c823d9901b0b73a885c4c1ae15096f00b453a.jpg",
+        "4구": IMG_BASE + "/2025/03/28/5130635b8d077730b24d05cfe4305f80971ce48b.jpg",
+        "6구": IMG_BASE + "/2025/03/28/82e9c8c68ed07001676f2476e0d0d91bfb920d74.jpg",
+        "8구": IMG_BASE + "/2025/03/28/205eaba1e2d4abe46b0e5b27deae6eee75c433d7.jpg",
+        "10구": IMG_BASE + "/2025/03/28/750efb322cd892ff1e2fca1e984eef6a36775b65.jpg"
+      },
+      "슬림자석": {
+        "1구": IMG_BASE + "/2025/03/28/f8d8c5bebb00d8ba726e73e6235be46b2b3d436e.jpg",
+        "2구": IMG_BASE + "/2025/03/28/f113b530baa6018fbe49b761bf1e9202998abb9d.jpg",
+        "3구": IMG_BASE + "/2025/03/28/4c1cc946d8d6fdbdf13e2cce19bf26de3d0573b3.jpg",
+        "4구": IMG_BASE + "/2025/03/28/42aab5879342f1c1ee8a7b457ee6ad509d21a840.jpg",
+        "6구": IMG_BASE + "/2025/03/28/89d29d4412d63e86ddccf0d1b71fbcea6e3eafba.jpg",
+        "8구": IMG_BASE + "/2024/05/07/8960f20b027506fbda5ab09523b79fb41d44b8cc.jpg",
+        "10구": IMG_BASE + "/2024/05/07/5303ea5fac84128f11149a55e3432bb1011ee03b.jpg"
+      },
+      "우드": {
+        "1구": IMG_BASE + "/2025/03/28/132538fc5272dbe8fafbc1b8270edae61eced159.jpg",
+        "2구": IMG_BASE + "/2025/03/28/c2005cd7552e651946f72a91c30a3396fde50ef2.jpg",
+        "3구": IMG_BASE + "/2025/03/28/eeb3f8f71508e9cb12753ce02ed33e13477149d1.jpg",
+        "4구": IMG_BASE + "/2025/03/28/7b7eff60a5932d975537509950ec4d83ec14609f.jpg",
+        "6구": IMG_BASE + "/2025/03/28/a7c8e240e9a94fbbde8058f3289e99ef5b3f9794.jpg",
+        "8구": IMG_BASE + "/2025/03/28/e4de70e46e8baf93d7b4b25a6e4cb2bf0e0cffd1.jpg",
+        "10구": IMG_BASE + "/2025/03/28/ef77974449cc745b81bc2584f1a2e1b1054a32db.jpg"
+      },
+      "알루미늄": {
+        "1구": IMG_BASE + "/2025/03/28/d4bc80e6723759ae4556364a88e3fc406b460524.jpg",
+        "2구": IMG_BASE + "/2025/03/28/a1acc496782e8fd634c5dd5070df9babc9e60658.jpg",
+        "3구": IMG_BASE + "/2025/03/28/50e5d26c294e1b66a9ff6db594365f53981d633c.jpg",
+        "4구": IMG_BASE + "/2025/03/28/bfbb851bccee48c269b268fe5061d7bf155f1fac.jpg",
+        "6구": IMG_BASE + "/2025/03/28/6003c84ecb69c7d73058642fbdcd77fba73d4c90.jpg",
+        "8구": IMG_BASE + "/2025/03/28/11e774cf888cff548493ef47dafb200b3770ff5e.jpg",
+        "10구": IMG_BASE + "/2025/03/28/997d51b580ab7d249456db1b9a0f5bbeeae4af01.jpg"
+      },
+      "슬림안전보건": {
+        "8구": IMG_BASE + "/2025/01/08/3cd9f09470b8881503353f50cd0d758150a192f7.jpg",
+        "10구": IMG_BASE + "/2025/01/08/3cd9f09470b8881503353f50cd0d758150a192f7.jpg"
+      },
+      "산업안전보건": {
+        "1구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "2구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "3구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "4구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "5구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "6구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "1구 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "2구 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "3구 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "4구 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "5구 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "6구 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg"
+      },
+      "갈바": {
+        "갈바게시판": IMG_BASE + "/2023/12/28/9095ca0cad1bdbf14f3cb95f695112542e073c9c.jpg",
+        "갈바프레임 게시판": IMG_BASE + "/2023/12/28/9095ca0cad1bdbf14f3cb95f695112542e073c9c.jpg",
+        "갈바프레임 주문제작": IMG_BASE + "/2023/12/28/9095ca0cad1bdbf14f3cb95f695112542e073c9c.jpg"
+      }
+    };
+
+    const MAIN_SERIES = ["슬림업","슬림디자인","안전강화유리","디자인","크리스탈","아크릴","슬림자석","우드","알루미늄"];
+    const SPECIAL_SERIES = ["슬림안전보건","산업안전보건","갈바"];
+
+    let qb_state = {
+      currentStep: 1,
+      totalSteps: 9,
+      selectedSeries: null,
+      selectedSize: null,
+      selectedType: null,
+      selectedAdPanel: null,
+      selectedDesign: null,
+      selectedAddons: [],
+      notes: '',
+      customerName: '',
+      customerPhone: '',
+      zoomCurrentDesign: 0,
+      zoomDesigns: []
+    };
+
+    function qb_formatPrice(num) {
+      return num.toLocaleString('ko-KR') + '원';
+    }
+
+    function qb_updateStepIndicator() {
+      const total = qb_state.totalSteps;
+      const current = qb_state.currentStep;
+      const el = document.getElementById('qb-progress');
+      if (!el) return;
+
+      // Build step label map based on current product
+      const labels = qb_getStepLabels();
+
+      let html = '';
+      for (let i = 1; i <= total; i++) {
+        let cls = i < current ? 'done' : i === current ? 'current' : 'upcoming';
+        let label = labels[i] || '';
+        html += '<div class="qb-progress-item">';
+        html += '<div class="qb-progress-step ' + cls + '">' + i + '</div>';
+        html += '<div class="qb-progress-label ' + cls + '">' + label + '</div>';
+        html += '</div>';
+        if (i < total) {
+          html += '<div class="qb-progress-line ' + (i < current ? 'done' : 'upcoming') + '"></div>';
+        }
+      }
+      el.innerHTML = html;
+    }
+
+    function qb_getStepLabels() {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const labels = {1: '시리즈', 2: '구수'};
+      let step = 3;
+      if (prod) {
+        if (prod.hasType) { labels[step] = '타입'; step++; }
+        if (prod.hasAdPanel) { labels[step] = '광고면'; step++; }
+        if (prod.hasDesign) { labels[step] = '디자인'; step++; }
+        if (prod.addons && prod.addons.length > 0) { labels[step] = '추가옵션'; step++; }
+      } else {
+        // Default before product selected
+        labels[3] = '타입'; labels[4] = '광고면'; labels[5] = '디자인';
+        labels[6] = '추가옵션'; step = 7;
+      }
+      labels[step] = '요청사항'; step++;
+      labels[step] = '주문자'; step++;
+      labels[step] = '확인';
+      return labels;
+    }
+
+    function qb_calculateTotalSteps() {
+      let steps = 2; // Series + Size always
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      if (!prod) return 9;
+
+      if (prod.hasType) steps++;
+      if (prod.hasAdPanel) steps++;
+      if (prod.hasDesign) steps++;
+      if (prod.addons && prod.addons.length > 0) steps++;
+      steps += 3; // Notes + Customer + Confirmation
+
+      return steps;
+    }
+
+    function qb_buildBreadcrumb() {
+      // Removed - using progress indicator instead
+    }
+
+    function qb_renderSeriesSelection() {
+      let html = '';
+
+      let mainHtml = '';
+      MAIN_SERIES.forEach(series => {
+        const prod = PRODUCTS[series];
+        const sizes = Object.keys(prod.sizes);
+        const minPrice = Math.min(...sizes.map(s => prod.sizes[s].price));
+        const maxPrice = Math.max(...sizes.map(s => prod.sizes[s].price));
+        const img = SERIES_IMAGES[series];
+
+        mainHtml += `
+          <div class="qb-series-card ${qb_state.selectedSeries === series ? 'selected' : ''}"
+               onclick="qb_selectSeries('${series}')">
+            <img src="${img}" alt="${series}" class="qb-series-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
+            <div class="qb-series-info">
+              <div class="qb-series-name">${series}</div>
+              <div class="qb-series-desc">${prod.desc}</div>
+              <div class="qb-series-meta">${qb_formatPrice(minPrice)} ~ ${qb_formatPrice(maxPrice)}</div>
+              <button class="qb-detail-btn" onclick="event.stopPropagation();qb_openDetailPage('${series}')">상세페이지 보기</button>
+            </div>
+          </div>
+        `;
+      });
+
+      let specialHtml = '';
+      SPECIAL_SERIES.forEach(series => {
+        const prod = PRODUCTS[series];
+        const sizes = Object.keys(prod.sizes);
+        const minPrice = Math.min(...sizes.map(s => prod.sizes[s].price));
+        const maxPrice = Math.max(...sizes.map(s => prod.sizes[s].price));
+        const img = SERIES_IMAGES[series];
+
+        specialHtml += `
+          <div class="qb-series-card ${qb_state.selectedSeries === series ? 'selected' : ''}"
+               onclick="qb_selectSeries('${series}')">
+            <img src="${img}" alt="${series}" class="qb-series-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
+            <div class="qb-series-info">
+              <div class="qb-series-name">${series}</div>
+              <div class="qb-series-desc">${prod.desc}</div>
+              <div class="qb-series-meta">${qb_formatPrice(minPrice)} ~ ${qb_formatPrice(maxPrice)}</div>
+              <button class="qb-detail-btn" onclick="event.stopPropagation();qb_openDetailPage('${series}')">상세페이지 보기</button>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('qb-main-series').innerHTML = mainHtml;
+      document.getElementById('qb-special-series').innerHTML = specialHtml;
+
+      const btn = document.getElementById('qb-step1-next');
+      btn.disabled = !qb_state.selectedSeries;
+    }
+
+    function qb_selectSeries(series) {
+      qb_state.selectedSeries = series;
+      qb_state.selectedSize = null;
+      qb_state.selectedType = null;
+      qb_state.selectedAdPanel = null;
+      qb_state.selectedDesign = null;
+      qb_state.selectedAddons = [];
+      qb_state.totalSteps = qb_calculateTotalSteps();
+      qb_renderSeriesSelection();
+    }
+
+    function qb_renderSizeSelection() {
+      const series = qb_state.selectedSeries;
+      const prod = PRODUCTS[series];
+      const sizes = Object.keys(prod.sizes);
+      const sizeImgs = SIZE_IMAGES[series] || {};
+      let html = '';
+
+      sizes.forEach(size => {
+        const price = prod.sizes[size].price;
+        const ship = prod.sizes[size].ship;
+        const imgUrl = sizeImgs[size] || SERIES_IMAGES[series] || '';
+        const escapedSize = size.replace(/'/g, "\\'");
+        html += `
+          <div class="qb-card ${qb_state.selectedSize === size ? 'selected' : ''}" onclick="qb_selectSize('${escapedSize}')" style="display:flex;gap:14px;align-items:center;padding:10px 14px">
+            ${imgUrl ? `<img src="${imgUrl}" alt="${size}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0;cursor:zoom-in;border:1px solid #353560;background:#1e1e38" onerror="this.onerror=null;this.style.display='none'" onclick="event.stopPropagation();qb_showImageZoom('${imgUrl}','${series} ${size}')">` : ''}
+            <div style="flex:1">
+              <div class="qb-card-radio" style="margin-bottom:0">
+                <div class="qb-radio"></div>
+                <div class="qb-card-label">
+                  <div class="qb-card-title">${size}</div>
+                  <div class="qb-card-desc">${qb_formatPrice(price)} (배송비: ${qb_formatPrice(ship)})</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('qb-sizes-container').innerHTML = html;
+      const btn = document.getElementById('qb-step2-next');
+      btn.disabled = !qb_state.selectedSize;
+    }
+
+    function qb_selectSize(size) {
+      qb_state.selectedSize = size;
+      qb_state.selectedType = null;
+      qb_state.selectedAdPanel = null;
+      qb_state.selectedDesign = null;
+      qb_renderSizeSelection();
+      qb_updatePriceBar();
+    }
+
+    function qb_renderTypeSelection() {
+      const types = Object.keys(TYPE_IMAGES);
+      let html = '';
+
+      types.forEach(type => {
+        const img = TYPE_IMAGES[type];
+        const desc = TYPE_DESC[type];
+        html += `
+          <div class="qb-card ${qb_state.selectedType === type ? 'selected' : ''}" onclick="qb_selectType('${type}')" style="display:flex;gap:16px;align-items:center;padding:12px">
+            <img src="${img}" alt="${type}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;cursor:zoom-in;background:#1e1e38;border:1px solid #353560" onerror="this.onerror=null;this.alt='${type}'" onclick="event.stopPropagation();qb_showImageZoom('${img}','${type}')">
+            <div style="flex:1">
+              <div class="qb-card-radio" style="margin-bottom:0">
+                <div class="qb-radio"></div>
+                <div class="qb-card-label">
+                  <div class="qb-card-title">${type}</div>
+                  <div class="qb-card-desc">${desc}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('qb-types-container').innerHTML = html;
+      const btn = document.getElementById('qb-step3-next');
+      btn.disabled = !qb_state.selectedType;
+    }
+
+    function qb_selectType(type) {
+      qb_state.selectedType = type;
+      qb_state.selectedAdPanel = null;
+      qb_state.selectedDesign = null;
+      qb_renderTypeSelection();
+    }
+
+    function qb_renderAdPanels() {
+      let html = '';
+
+      AD_PANELS.forEach((panel, idx) => {
+        html += `
+          <div class="qb-card ${qb_state.selectedAdPanel === idx ? 'selected' : ''}" onclick="qb_selectAdPanel(${idx})">
+            <div class="qb-card-radio">
+              <div class="qb-radio"></div>
+              <div class="qb-card-label">
+                <div class="qb-card-title">${panel.icon} ${panel.value}</div>
+                <div class="qb-card-desc">${panel.desc}</div>
+                <div style="font-size: 12px; color: #9ca3af; margin-top: 6px;">규격: ${panel.size} / 가격: ${qb_formatPrice(panel.price)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById('qb-ad-panels-container').innerHTML = html;
+      const btn = document.getElementById('qb-step4-next');
+      btn.disabled = qb_state.selectedAdPanel === null;
+    }
+
+    function qb_selectAdPanel(idx) {
+      qb_state.selectedAdPanel = idx;
+      qb_state.selectedDesign = null;
+      qb_renderAdPanels();
+      qb_updatePriceBar();
+    }
+
+    function qb_renderDesignSelection() {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const cats = prod.designCats === 'standard' ? DESIGN_CATS_STANDARD : DESIGN_CATS_EXTENDED;
+
+      let html = '<div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">';
+      Object.keys(cats).forEach(cat => {
+        html += `<button onclick="qb_switchDesignCat('${cat}')" style="padding: 8px 16px; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer; font-size: 13px;" class="qb-design-cat-btn" data-cat="${cat}">${cat}</button>`;
+      });
+      html += '</div>';
+
+      document.getElementById('qb-design-category-tabs').innerHTML = html;
+
+      const firstCat = Object.keys(cats)[0];
+      qb_switchDesignCat(firstCat);
+    }
+
+    function qb_switchDesignCat(cat) {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const cats = prod.designCats === 'standard' ? DESIGN_CATS_STANDARD : DESIGN_CATS_EXTENDED;
+      const designs = cats[cat];
+
+      document.querySelectorAll('.qb-design-cat-btn').forEach(btn => {
+        btn.style.borderColor = btn.dataset.cat === cat ? '#2B4C8C' : '#d1d5db';
+        btn.style.background = btn.dataset.cat === cat ? '#e8edf7' : 'white';
+        btn.style.color = btn.dataset.cat === cat ? '#2B4C8C' : '#1f2937';
+      });
+
+      let html = '';
+      designs.forEach(design => {
+        const key = cat + '_' + design;
+        const hash = DM[key];
+        if (hash) {
+          const img = DESIGN_BASE + hash;
+          html += `
+            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}" onclick="qb_selectDesign('${key}', event)">
+              <div style="position: relative;">
+                <img src="${img}" alt="${design}" class="qb-design-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
+                <div class="qb-design-zoom-icon" onclick="qb_openZoom('${key}', event)">🔍</div>
+              </div>
+              <div class="qb-design-info">
+                <div class="qb-design-code">${design}</div>
+                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">선택</button>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      document.getElementById('qb-design-grid').innerHTML = html;
+
+      const btn = document.getElementById('qb-step5-next');
+      btn.disabled = !qb_state.selectedDesign;
+    }
+
+    function qb_selectDesign(designKey, event) {
+      event.stopPropagation();
+      qb_state.selectedDesign = designKey;
+      document.querySelectorAll('.qb-design-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      event.target.closest('.qb-design-item')?.classList.add('selected');
+      document.getElementById('qb-step5-next').disabled = false;
+    }
+
+    function qb_selectDesignFromButton(designKey, event) {
+      event.stopPropagation();
+      qb_state.selectedDesign = designKey;
+      document.querySelectorAll('.qb-design-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      event.target.closest('.qb-design-item')?.classList.add('selected');
+      document.getElementById('qb-step5-next').disabled = false;
+    }
+
+    function qb_openZoom(designKey, event) {
+      event.stopPropagation();
+      // 줌 상태 초기화 (이전 열기 데이터 제거)
+      qb_state.zoomDesigns = [];
+      qb_state.zoomCurrentDesign = 0;
+
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const cats = prod.designCats === 'standard' ? DESIGN_CATS_STANDARD : DESIGN_CATS_EXTENDED;
+
+      for (let cat in cats) {
+        const designs = cats[cat];
+        for (let i = 0; i < designs.length; i++) {
+          const code = designs[i];
+          const key = cat + '_' + code;
+          const hash = DM[key];
+          if (hash) {
+            if (key === designKey) {
+              qb_state.zoomCurrentDesign = qb_state.zoomDesigns.length;
+            }
+            qb_state.zoomDesigns.push({key, hash, img: DESIGN_BASE + hash});
+          }
+        }
+      }
+
+      const overlay = document.getElementById('qb-zoom-overlay');
+      // showImageZoom에서 숨긴 선택버튼 복원
+      const selectBtn = document.querySelector('.qb-zoom-select-btn');
+      if (selectBtn) selectBtn.style.display = 'flex';
+      overlay.classList.add('active');
+      qb_updateZoomImage();
+    }
+
+    function qb_updateZoomImage() {
+      const design = qb_state.zoomDesigns[qb_state.zoomCurrentDesign];
+      document.getElementById('qb-zoom-image').src = design.img;
+      document.getElementById('qb-zoom-prev').style.display = qb_state.zoomCurrentDesign > 0 ? 'flex' : 'none';
+      document.getElementById('qb-zoom-next').style.display = qb_state.zoomCurrentDesign < qb_state.zoomDesigns.length - 1 ? 'flex' : 'none';
+    }
+
+    function qb_prevDesign() {
+      if (qb_state.zoomCurrentDesign > 0) {
+        qb_state.zoomCurrentDesign--;
+        qb_updateZoomImage();
+      }
+    }
+
+    function qb_nextDesign() {
+      if (qb_state.zoomCurrentDesign < qb_state.zoomDesigns.length - 1) {
+        qb_state.zoomCurrentDesign++;
+        qb_updateZoomImage();
+      }
+    }
+
+    function qb_selectFromZoom() {
+      qb_state.selectedDesign = qb_state.zoomDesigns[qb_state.zoomCurrentDesign].key;
+      qb_closeZoom();
+      document.querySelectorAll('.qb-design-item').forEach(item => {
+        item.classList.remove('selected');
+        if (item.innerHTML.includes(qb_state.selectedDesign)) {
+          item.classList.add('selected');
+        }
+      });
+      document.getElementById('qb-step5-next').disabled = false;
+    }
+
+    // 상세페이지 뷰어
+    function qb_openDetailPage(series) {
+      const url = DETAIL_PAGES[series];
+      if (!url) return;
+
+      const modal = document.getElementById('qb-detail-modal');
+      const loading = document.getElementById('qb-detail-loading');
+      const content = document.getElementById('qb-detail-content');
+      const title = document.getElementById('qb-detail-title');
+
+      title.textContent = series + ' 게시판 상세페이지';
+      content.innerHTML = '';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      const isSameOrigin = location.hostname === 'www.hanasignmall.kr';
+
+      if (isSameOrigin) {
+        // 실제 사이트: fetch로 에디터 영역 추출
+        loading.style.display = 'flex';
+        fetch(url)
+          .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+          .then(html => {
+            loading.style.display = 'none';
+            const s = html.indexOf('<!-- 상품등록 에디터 영역 -->');
+            const e = html.indexOf('<!-- //상품등록 에디터 영역 -->');
+            let extracted = (s !== -1 && e !== -1) ? html.substring(s + '<!-- 상품등록 에디터 영역 -->'.length, e) : '';
+            if (!extracted) {
+              const doc = new DOMParser().parseFromString(html, 'text/html');
+              const det = doc.querySelector('#item-detail') || doc.querySelector('.goods-tabcont');
+              extracted = det ? det.innerHTML : '';
+            }
+            extracted = extracted.replace(/(src=["'])\//g, '$1https://www.hanasignmall.kr/');
+            extracted = extracted.replace(/(src=["'])(?!https?:\/\/|data:)/g, '$1https://www.hanasignmall.kr/');
+            content.innerHTML = extracted || '<p style="padding:40px;text-align:center;color:#6b7280;">내용을 추출할 수 없습니다.</p>';
+          })
+          .catch(() => {
+            loading.style.display = 'none';
+            content.innerHTML = '<p style="padding:40px;text-align:center;color:#ef4444;">페이지를 불러올 수 없습니다.<br><a href="' + url + '" target="_blank" style="color:#2B4C8C;">새 탭에서 직접 확인</a></p>';
+          });
+      } else {
+        // 프로토타입: DETAIL_CACHE 이미지로 렌더링
+        loading.style.display = 'none';
+        const cached = DETAIL_CACHE[series];
+        if (cached && cached.length > 0) {
+          let html = '<div style="padding:0;text-align:center;background:#fff;">';
+          cached.forEach(path => {
+            const fullUrl = path.startsWith('http') ? path : HGODO + path;
+            html += '<img src="' + fullUrl + '" style="width:100%;display:block;" loading="lazy">';
+          });
+          html += '</div>';
+          content.innerHTML = html;
+        } else {
+          content.innerHTML = '<p style="padding:40px;text-align:center;color:#6b7280;">캐시된 상세페이지가 없습니다.<br><a href="' + url + '" target="_blank" style="color:#2B4C8C;">새 탭에서 직접 확인</a></p>';
+        }
+      }
+    }
+
+    function qb_closeDetail() {
+      const modal = document.getElementById('qb-detail-modal');
+      modal.classList.remove('active');
+      document.getElementById('qb-detail-content').innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    function qb_closeZoom() {
+      document.getElementById('qb-zoom-overlay').classList.remove('active');
+      qb_state.zoomDesigns = [];
+      qb_state.zoomCurrentDesign = 0;
+    }
+
+    // 단순 이미지 확대 (타입 이미지 등)
+    function qb_showImageZoom(imgUrl, caption) {
+      const overlay = document.getElementById('qb-zoom-overlay');
+      document.getElementById('qb-zoom-image').src = imgUrl;
+      document.getElementById('qb-zoom-prev').style.display = 'none';
+      document.getElementById('qb-zoom-next').style.display = 'none';
+      const selectBtn = document.querySelector('.qb-zoom-select-btn');
+      if (selectBtn) selectBtn.style.display = 'none';
+      overlay.classList.add('active');
+    }
+
+    function qb_renderAddons() {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      if (!prod.addons || prod.addons.length === 0) return;
+
+      let html = '';
+      prod.addons.forEach((addon, idx) => {
+        html += `
+          <label class="qb-checkbox">
+            <input type="checkbox" value="${idx}" onchange="qb_toggleAddon(${idx})">
+            <span class="qb-checkbox-label">${addon.name} (+${qb_formatPrice(addon.price)})</span>
+          </label>
+        `;
+      });
+
+      document.getElementById('qb-addons-container').innerHTML = html;
+    }
+
+    function qb_toggleAddon(idx) {
+      const input = document.querySelector(`input[value="${idx}"]`);
+      if (input.checked) {
+        if (!qb_state.selectedAddons.includes(idx)) {
+          qb_state.selectedAddons.push(idx);
+        }
+      } else {
+        qb_state.selectedAddons = qb_state.selectedAddons.filter(a => a !== idx);
+      }
+      qb_updatePriceBar();
+    }
+
+    function qb_renderCustomerForm() {
+      // Already in HTML
+    }
+
+    function qb_renderConfirmation() {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      let html = '';
+
+      // Series
+      html += `
+        <div class="qb-confirmation-row">
+          <div class="qb-confirmation-label">시리즈</div>
+          <div class="qb-confirmation-value">
+            <div class="qb-confirmation-text">${qb_state.selectedSeries}</div>
+            <button class="qb-confirmation-edit" onclick="qb_jumpToStep(1)">수정</button>
+          </div>
+        </div>
+      `;
+
+      // Size
+      html += `
+        <div class="qb-confirmation-row">
+          <div class="qb-confirmation-label">구수</div>
+          <div class="qb-confirmation-value">
+            <div class="qb-confirmation-text">${qb_state.selectedSize}</div>
+            <button class="qb-confirmation-edit" onclick="qb_jumpToStep(2)">수정</button>
+          </div>
+        </div>
+      `;
+
+      // Type
+      if (prod.hasType) {
+        html += `
+          <div class="qb-confirmation-row">
+            <div class="qb-confirmation-label">타입</div>
+            <div class="qb-confirmation-value">
+              <div class="qb-confirmation-text">${qb_state.selectedType}</div>
+              <button class="qb-confirmation-edit" onclick="qb_jumpToStep(3)">수정</button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Ad Panel
+      if (prod.hasAdPanel) {
+        html += `
+          <div class="qb-confirmation-row">
+            <div class="qb-confirmation-label">광고면</div>
+            <div class="qb-confirmation-value">
+              <div class="qb-confirmation-text">${AD_PANELS[qb_state.selectedAdPanel].value}</div>
+              <button class="qb-confirmation-edit" onclick="qb_jumpToStep(4)">수정</button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Design
+      if (prod.hasDesign && qb_state.selectedDesign) {
+        const designKey = qb_state.selectedDesign;
+        const dmKey = Object.keys(DM).find(k => k.endsWith('_' + designKey));
+        const designImgUrl = dmKey ? DESIGN_BASE + DM[dmKey] : '';
+        html += `
+          <div class="qb-confirmation-row">
+            <div class="qb-confirmation-label">디자인</div>
+            <div class="qb-confirmation-value">
+              ${designImgUrl ? '<img src="' + designImgUrl + '" alt="' + designKey + '" class="qb-confirmation-image">' : ''}
+              <div class="qb-confirmation-text">${qb_state.selectedDesign}</div>
+              <button class="qb-confirmation-edit" onclick="qb_jumpToStep(5)">수정</button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Addons
+      if (qb_state.selectedAddons.length > 0) {
+        let addonText = qb_state.selectedAddons.map(idx => prod.addons[idx].name).join(', ');
+        html += `
+          <div class="qb-confirmation-row">
+            <div class="qb-confirmation-label">추가옵션</div>
+            <div class="qb-confirmation-value">
+              <div class="qb-confirmation-text">${addonText}</div>
+              <button class="qb-confirmation-edit" onclick="qb_jumpToStep(6)">수정</button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Customer Info
+      html += `
+        <div class="qb-confirmation-row">
+          <div class="qb-confirmation-label">주문자명</div>
+          <div class="qb-confirmation-value">
+            <div class="qb-confirmation-text">${qb_state.customerName}</div>
+            <button class="qb-confirmation-edit" onclick="qb_jumpToStep(8)">수정</button>
+          </div>
+        </div>
+      `;
+
+      html += `
+        <div class="qb-confirmation-row">
+          <div class="qb-confirmation-label">연락처</div>
+          <div class="qb-confirmation-value">
+            <div class="qb-confirmation-text">${qb_state.customerPhone}</div>
+          </div>
+        </div>
+      `;
+
+
+      if (qb_state.notes) {
+        html += `
+          <div class="qb-confirmation-row">
+            <div class="qb-confirmation-label">요청사항</div>
+            <div class="qb-confirmation-value">
+              <div class="qb-confirmation-text">${qb_state.notes}</div>
+              <button class="qb-confirmation-edit" onclick="qb_jumpToStep(7)">수정</button>
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('qb-confirmation-container').innerHTML = html;
+    }
+
+    function qb_updatePriceBar() {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      if (!qb_state.selectedSize) return;
+
+      const sizeData = prod.sizes[qb_state.selectedSize];
+      let productPrice = sizeData.price;
+      let shippingPrice = sizeData.ship;
+
+      if (qb_state.selectedAdPanel !== null) {
+        productPrice += AD_PANELS[qb_state.selectedAdPanel].price;
+      }
+
+      qb_state.selectedAddons.forEach(idx => {
+        productPrice += prod.addons[idx].price;
+      });
+
+      const total = productPrice + shippingPrice;
+
+      document.getElementById('qb-price-product').textContent = qb_formatPrice(productPrice);
+      document.getElementById('qb-price-shipping').textContent = qb_formatPrice(shippingPrice);
+      document.getElementById('qb-price-total').textContent = qb_formatPrice(total);
+
+      document.getElementById('qb-summary-product').textContent = qb_formatPrice(productPrice);
+      document.getElementById('qb-summary-shipping').textContent = qb_formatPrice(shippingPrice);
+      document.getElementById('qb-summary-total').textContent = qb_formatPrice(total);
+
+      if (qb_state.selectedAdPanel !== null && AD_PANELS[qb_state.selectedAdPanel].price > 0) {
+        document.getElementById('qb-summary-ad-row').style.display = 'flex';
+        document.getElementById('qb-summary-ad').textContent = qb_formatPrice(AD_PANELS[qb_state.selectedAdPanel].price);
+      } else {
+        document.getElementById('qb-summary-ad-row').style.display = 'none';
+      }
+
+      if (qb_state.selectedAddons.length > 0) {
+        const addonPrice = qb_state.selectedAddons.reduce((sum, idx) => sum + prod.addons[idx].price, 0);
+        document.getElementById('qb-summary-addons-row').style.display = 'flex';
+        document.getElementById('qb-summary-addons').textContent = qb_formatPrice(addonPrice);
+      } else {
+        document.getElementById('qb-summary-addons-row').style.display = 'none';
+      }
+    }
+
+    function qb_nextStep() {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const stepMap = [
+        null,
+        () => { qb_state.currentStep = 2; qb_renderSizeSelection(); },
+        () => {
+          if (prod.hasType) {
+            qb_state.currentStep = 3;
+            qb_renderTypeSelection();
+          } else if (prod.hasAdPanel) {
+            qb_state.currentStep = 4;
+            qb_renderAdPanels();
+          } else if (prod.hasDesign) {
+            qb_state.currentStep = 5;
+            qb_renderDesignSelection();
+          } else if (prod.addons && prod.addons.length > 0) {
+            qb_state.currentStep = 6;
+            qb_renderAddons();
+          } else {
+            qb_state.currentStep = 7;
+          }
+        },
+        () => {
+          if (prod.hasAdPanel) {
+            qb_state.currentStep = 4;
+            qb_renderAdPanels();
+          } else if (prod.hasDesign) {
+            qb_state.currentStep = 5;
+            qb_renderDesignSelection();
+          } else if (prod.addons && prod.addons.length > 0) {
+            qb_state.currentStep = 6;
+            qb_renderAddons();
+          } else {
+            qb_state.currentStep = 7;
+          }
+        },
+        () => {
+          if (prod.hasDesign) {
+            qb_state.currentStep = 5;
+            qb_renderDesignSelection();
+          } else if (prod.addons && prod.addons.length > 0) {
+            qb_state.currentStep = 6;
+            qb_renderAddons();
+          } else {
+            qb_state.currentStep = 7;
+          }
+        },
+        () => {
+          if (prod.addons && prod.addons.length > 0) {
+            qb_state.currentStep = 6;
+            qb_renderAddons();
+          } else {
+            qb_state.currentStep = 7;
+          }
+        },
+        () => {
+          qb_state.currentStep = 7;
+        },
+        () => {
+          qb_state.currentStep = 8;
+        },
+        () => {
+          qb_state.currentStep = 9;
+          qb_renderConfirmation();
+        }
+      ];
+
+      if (stepMap[qb_state.currentStep]) {
+        stepMap[qb_state.currentStep]();
+      }
+
+      qb_showStep();
+    }
+
+    function qb_prevStep() {
+      qb_state.currentStep--;
+      qb_showStep();
+    }
+
+    function qb_jumpToStep(stepNum) {
+      qb_state.currentStep = stepNum;
+      qb_showStep();
+    }
+
+    function qb_showStep() {
+      document.querySelectorAll('.qb-step-content').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // Step 7: requireNote에 따라 부제목/필수 표시 동적 변경
+      if (qb_state.currentStep === 7 && qb_state.selectedSeries) {
+        const prod = PRODUCTS[qb_state.selectedSeries];
+        const subtitleEl = document.querySelector('#qb-step-7 .qb-step-subtitle');
+        const notesEl = document.getElementById('qb-notes');
+        if (prod && prod.requireNote) {
+          if (subtitleEl) subtitleEl.textContent = '이 제품은 요청사항 입력이 필수입니다 (예: 게시 내용, 디자인 요청 등)';
+          if (notesEl) notesEl.placeholder = '필수 입력: 게시 내용, 디자인 요청, 규격 변경 등을 입력해주세요';
+        } else {
+          if (subtitleEl) subtitleEl.textContent = '배송 및 제작 시 특별한 요청사항이 있으면 입력하세요';
+          if (notesEl) notesEl.placeholder = '예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등...';
+        }
+      }
+
+      document.getElementById(`qb-step-${qb_state.currentStep}`).classList.add('active');
+      qb_updateStepIndicator();
+      qb_buildBreadcrumb();
+      qb_updatePriceBar();
+      window.scrollTo(0, 0);
+    }
+
+    function qb_checkCustomerForm() {
+      const name = document.getElementById('qb-name').value.trim();
+      const phone = document.getElementById('qb-phone').value.trim();
+      const btn = document.getElementById('qb-step8-next');
+      if (btn) btn.disabled = !(name && phone);
+    }
+
+    function qb_validateCustomerInfo() {
+      qb_state.customerName = document.getElementById('qb-name').value.trim();
+      qb_state.customerPhone = document.getElementById('qb-phone').value.trim();
+
+      return qb_state.customerName && qb_state.customerPhone;
+    }
+
+    function qb_submitOrder() {
+      if (!qb_validateCustomerInfo()) {
+        alert('모든 정보를 입력해주세요');
+        return;
+      }
+
+      qb_state.notes = document.getElementById('qb-notes').value.trim();
+
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const sizeData = prod.sizes[qb_state.selectedSize];
+      let productPrice = sizeData.price;
+      let shippingPrice = sizeData.ship;
+
+      if (qb_state.selectedAdPanel !== null) {
+        productPrice += AD_PANELS[qb_state.selectedAdPanel].price;
+      }
+
+      qb_state.selectedAddons.forEach(idx => {
+        productPrice += prod.addons[idx].price;
+      });
+
+      const total = productPrice + shippingPrice;
+
+      const orderData = {
+        series: qb_state.selectedSeries,
+        size: qb_state.selectedSize,
+        type: qb_state.selectedType,
+        adPanel: qb_state.selectedAdPanel !== null ? AD_PANELS[qb_state.selectedAdPanel].value : null,
+        design: qb_state.selectedDesign,
+        addons: qb_state.selectedAddons.map(idx => prod.addons[idx].name),
+        notes: qb_state.notes,
+        customerName: qb_state.customerName,
+        customerPhone: qb_state.customerPhone,
+        productPrice: productPrice,
+        shippingPrice: shippingPrice,
+        totalPrice: total,
+        timestamp: new Date().toISOString()
+      };
+
+      console.log('Order submitted:', JSON.stringify(orderData, null, 2));
+
+      const modal = document.getElementById('qb-success-modal');
+      document.getElementById('qb-modal-amount').textContent = qb_formatPrice(total);
+      modal.classList.add('active');
+    }
+
+    function qb_newOrder() {
+      location.reload();
+    }
+
+    // Event listeners
+    document.getElementById('qb-step1-next').addEventListener('click', qb_nextStep);
+    document.getElementById('qb-step2-next').addEventListener('click', qb_nextStep);
+    document.getElementById('qb-step3-next').addEventListener('click', qb_nextStep);
+    document.getElementById('qb-step4-next').addEventListener('click', qb_nextStep);
+    document.getElementById('qb-step5-next').addEventListener('click', qb_nextStep);
+    document.getElementById('qb-step6-next').addEventListener('click', qb_nextStep);
+    document.getElementById('qb-step7-next').addEventListener('click', () => {
+      const notes = document.getElementById('qb-notes').value.trim();
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      if (prod && prod.requireNote && !notes) {
+        alert('이 제품은 요청사항 입력이 필수입니다.\n예: 게시 내용, 디자인 요청, 규격 변경 등');
+        return;
+      }
+      qb_state.notes = notes;
+      qb_nextStep();
+    });
+
+    document.getElementById('qb-step8-next').addEventListener('click', () => {
+      if (qb_validateCustomerInfo()) {
+        qb_nextStep();
+      } else {
+        alert('모든 정보를 입력해주세요');
+      }
+    });
+
+    document.getElementById('qb-step9-submit').addEventListener('click', qb_submitOrder);
+
+    document.getElementById('qb-zoom-overlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        qb_closeZoom();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        qb_closeZoom();
+      }
+    });
+
+    // Logo: try loading image, fallback to text
+    (function() {
+      var logoImg = document.getElementById('qb-logo-real');
+      var logoFb = document.getElementById('qb-logo-fb');
+      if (logoImg) {
+        logoImg.onload = function() { logoImg.style.display = 'block'; logoFb.style.display = 'none'; };
+        logoImg.onerror = function() { logoImg.style.display = 'none'; logoFb.style.display = 'flex'; };
+        if (logoImg.complete && logoImg.naturalWidth > 0) { logoImg.style.display = 'block'; logoFb.style.display = 'none'; }
+      }
+    })();
+
+    // Initialize with error catching
+    try {
+      qb_renderSeriesSelection();
+      qb_updateStepIndicator();
+      qb_updatePriceBar();
+    } catch(e) {
+      var errEl = document.getElementById('qb-error');
+      if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'JS Error: ' + e.message + ' | Line: ' + (e.lineNumber || 'unknown') + ' | ' + e.stack; }
+    }
+  </script>
+</body>
+</html>
