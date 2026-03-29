@@ -157,7 +157,7 @@
     .qb-step-content.active {
       display: block;
       animation: fadeIn 0.3s ease-in;
-      padding-bottom: 140px;
+      padding-bottom: 180px;
     }
 
     @keyframes fadeIn {
@@ -516,16 +516,15 @@
       display: flex;
       gap: 12px;
       padding: 14px 20px;
-      border-top: 1px solid #2a2a4a;
       position: fixed;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
       max-width: 800px;
-      background: #1e1e36;
+      background: #ffffff;
       z-index: 100;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
     }
 
     .qb-button {
@@ -542,6 +541,7 @@
     .qb-button-primary {
       background: #4A7BF7;
       color: white;
+      border: none;
     }
 
     .qb-button-primary:hover {
@@ -555,13 +555,13 @@
     }
 
     .qb-button-secondary {
-      background: #242442;
+      background: #f0f4ff;
       color: #4A7BF7;
       border: 1px solid #4A7BF7;
     }
 
     .qb-button-secondary:hover {
-      background: #2a2a50;
+      background: #e0e8ff;
     }
 
     .qb-input-group {
@@ -639,7 +639,7 @@
 
     .qb-price-bar {
       position: fixed;
-      bottom: 56px;
+      bottom: 76px;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
@@ -1010,7 +1010,7 @@
 
       .qb-button-group { max-width: 100%; padding: 12px 16px; }
       .qb-button { font-size: 15px; padding: 12px 20px; }
-      .qb-price-bar { padding: 10px 16px; }
+      .qb-price-bar { padding: 10px 16px; bottom: 68px; }
       .qb-price-value { font-size: 17px; }
       .qb-total-value { font-size: 26px; }
 
@@ -1059,14 +1059,14 @@
       .qb-button-group { flex-direction: column; padding: 10px; gap: 8px; }
       .qb-button { font-size: 14px; padding: 11px 16px; }
 
-      .qb-price-bar { padding: 8px 10px; bottom: 90px; }
+      .qb-price-bar { padding: 8px 10px; bottom: 112px; }
       .qb-price-info { gap: 16px; }
       .qb-price-label { font-size: 10px; }
       .qb-price-value { font-size: 14px; }
       .qb-total-label { font-size: 10px; }
       .qb-total-value { font-size: 20px; }
 
-      .qb-step-content.active { padding-bottom: 180px; }
+      .qb-step-content.active { padding-bottom: 220px; }
 
       .qb-label { font-size: 14px; }
       .qb-checkbox-label { font-size: 14px; }
