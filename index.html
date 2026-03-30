@@ -1431,19 +1431,19 @@
       },
       "아크릴": {
         sizes: {"1구":{price:48000,ship:7000},"2구":{price:85000,ship:7000},"3구":{price:123000,ship:7000},"4구":{price:160000,ship:7000},"6구":{price:205000,ship:7000},"8구":{price:309000,ship:0},"10구":{price:371000,ship:0}},
-        hasType:false, hasAdPanel:false, hasDesign:true,
+        hasType:false, hasAdPanel:false, hasDesign:false,
         addons:[],requireNote:false,
         desc:"A4/A3 다양한 규격. 투명 아크릴 소재"
       },
       "슬림자석": {
         sizes: {"1구":{price:55600,ship:0},"2구":{price:92800,ship:0},"3구":{price:128800,ship:0},"4구":{price:166000,ship:0},"6구":{price:207000,ship:0},"8구":{price:306000,ship:0},"10구":{price:365000,ship:0}},
-        hasType:false, hasAdPanel:false, hasDesign:true,
+        hasType:false, hasAdPanel:false, hasDesign:false,
         addons:[{name:"아크릴포켓 추가",price:10000},{name:"자석추가 2개",price:3000}],requireNote:false,
         desc:"자석 탈부착 방식으로 용지 교체 간편"
       },
       "우드": {
         sizes: {"1구":{price:32000,ship:5000},"2구":{price:39900,ship:5000},"3구":{price:46000,ship:6000},"4구":{price:57000,ship:6000},"6구":{price:71000,ship:7000},"8구":{price:84500,ship:10000},"10구":{price:115000,ship:12000}},
-        hasType:true, hasAdPanel:true, hasDesign:false, hasColor:true,
+        hasType:true, hasAdPanel:true, hasDesign:true, hasColor:true,
         adPanelSet:"standard",
         typeOptions:[{name:"집게형",delta:0},{name:"포켓형",delta:24000},{name:"덮개형",delta:24000}],
         colorOptions:["베이지","황토","체리","진밤색","월넛"],
@@ -1918,7 +1918,7 @@
     function qb_renderDesignSelection() {
       const prod = PRODUCTS[qb_state.selectedSeries];
 
-      // 색상 선택형 (colorImages가 있는 제품: 슬림안전보건 등)
+      // 색상 선택형 - colorImages 있는 경우 (슬림안전보건: 구수×타입×색상 조합 이미지)
       if (prod.colorImages) {
         const sizeImgs = prod.colorImages[qb_state.selectedSize] || {};
         const typeImgs = sizeImgs[qb_state.selectedType] || {};
@@ -1930,6 +1930,32 @@
           html += `
             <div class="qb-card ${qb_state.selectedDesign === color ? 'selected' : ''}" onclick="qb_selectColorDesign('${color}')" style="display:flex;gap:16px;align-items:center;padding:12px;cursor:pointer">
               ${img ? `<img src="${img}" alt="${color}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#1e1e38;border:1px solid #353560" onerror="this.onerror=null;this.style.display='none'">` : ''}
+              <div style="flex:1">
+                <div class="qb-card-radio" style="margin-bottom:0">
+                  <div class="qb-radio"></div>
+                  <div class="qb-card-label">
+                    <div class="qb-card-title">${color}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        document.getElementById('qb-design-grid').style.display = 'flex';
+        document.getElementById('qb-design-grid').style.flexDirection = 'column';
+        document.getElementById('qb-design-grid').style.gap = '12px';
+        document.getElementById('qb-design-grid').innerHTML = html;
+        document.getElementById('qb-step5-next').disabled = !qb_state.selectedDesign;
+        return;
+      }
+
+      // 색상 선택형 - colorImages 없고 hasColor만 있는 경우 (우드: 이미지 없이 텍스트 카드)
+      if (prod.hasColor && prod.colorOptions) {
+        document.getElementById('qb-design-category-tabs').innerHTML = '<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">색상을 선택하세요</p>';
+        let html = '';
+        prod.colorOptions.forEach(color => {
+          html += `
+            <div class="qb-card ${qb_state.selectedDesign === color ? 'selected' : ''}" onclick="qb_selectColorDesign('${color}')" style="display:flex;gap:16px;align-items:center;padding:16px;cursor:pointer">
               <div style="flex:1">
                 <div class="qb-card-radio" style="margin-bottom:0">
                   <div class="qb-radio"></div>
@@ -2274,11 +2300,15 @@
         let designImgUrl = '';
         let designLabel = '디자인';
         if (prod.colorImages) {
-          // 색상 선택형: colorImages에서 이미지 가져오기
+          // 색상 선택형 (슬림안전보건): colorImages에서 이미지 가져오기
           designLabel = '색상';
           const sizeImgs = prod.colorImages[qb_state.selectedSize] || {};
           const typeImgs = sizeImgs[qb_state.selectedType] || {};
           designImgUrl = typeImgs[designKey] || '';
+        } else if (prod.hasColor && prod.colorOptions) {
+          // 색상 선택형 (우드 등): 이미지 없이 텍스트만
+          designLabel = '색상';
+          designImgUrl = '';
         } else {
           designImgUrl = (designKey && DM[designKey]) ? DESIGN_BASE + DM[designKey] : '';
         }
