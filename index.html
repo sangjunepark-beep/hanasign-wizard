@@ -589,7 +589,6 @@
     input[type="text"],
     input[type="email"],
     input[type="tel"],
-    select,
     textarea {
       width: 100%;
       padding: 10px;
@@ -601,30 +600,9 @@
       color: #e8e8ec;
     }
 
-    select {
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 32px;
-    }
-
-    .qb-extra-ship-notice {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 13px;
-      color: #f87171;
-      margin-top: -4px;
-    }
-
     input[type="text"]:focus,
     input[type="email"]:focus,
     input[type="tel"]:focus,
-    select:focus,
     textarea:focus {
       outline: none;
       border-color: #4A7BF7;
@@ -1235,15 +1213,6 @@
           <input type="tel" id="qb-phone" placeholder="010-0000-0000" required oninput="qb_checkCustomerForm()">
         </div>
 
-        <div class="qb-input-group">
-          <label class="qb-label qb-label-required">배송 지역</label>
-          <select id="qb-region" onchange="qb_onRegionChange()">
-            <option value="일반">일반 지역 (수도권/내륙)</option>
-            <option value="제주">제주 지역</option>
-            <option value="도서산간">도서산간 지역</option>
-          </select>
-        </div>
-        <div id="qb-extra-ship-notice" class="qb-extra-ship-notice" style="display:none;"></div>
       </div>
 
       <div class="qb-button-group">
@@ -1348,9 +1317,6 @@
   <script>
     const IMG_BASE = 'https://www.hanasignmall.kr/gsfiles_room';
     const HGODO = 'https://hanasigm.hgodo.com/';
-
-    // 제주/도서산간 추가배송비 (전 시리즈 공통)
-    const EXTRA_SHIP = { '일반': 0, '제주': 6000, '도서산간': 6000 };
 
     // 상세페이지 에디터 영역 이미지 캐시 (프로토타입용)
     const DETAIL_CACHE = {
@@ -1662,7 +1628,6 @@
       notes: '',
       customerName: '',
       customerPhone: '',
-      selectedRegion: '일반',
       zoomCurrentDesign: 0,
       zoomDesigns: []
     };
@@ -2267,18 +2232,6 @@
         </div>
       `;
 
-      // Region
-      html += `
-        <div class="qb-confirmation-row">
-          <div class="qb-confirmation-label">배송지역</div>
-          <div class="qb-confirmation-value">
-            <div class="qb-confirmation-text">${qb_state.selectedRegion}${qb_state.selectedRegion !== '일반' ? ' (추가 ' + qb_formatPrice(EXTRA_SHIP[qb_state.selectedRegion]) + ')' : ''}</div>
-            <button class="qb-confirmation-edit" onclick="qb_jumpToStep(8)">수정</button>
-          </div>
-        </div>
-      `;
-
-
       if (qb_state.notes) {
         html += `
           <div class="qb-confirmation-row">
@@ -2300,7 +2253,7 @@
 
       const sizeData = prod.sizes[qb_state.selectedSize];
       let productPrice = sizeData.price;
-      let shippingPrice = sizeData.ship + (EXTRA_SHIP[qb_state.selectedRegion] || 0);
+      let shippingPrice = sizeData.ship;
 
       if (qb_state.selectedAdPanel !== null) {
         productPrice += AD_PANELS[qb_state.selectedAdPanel].price;
@@ -2449,20 +2402,7 @@
       requestAnimationFrame(qb_adjustPriceBarPosition);
     }
 
-    function qb_onRegionChange() {
-      const region = document.getElementById('qb-region').value;
-      qb_state.selectedRegion = region;
-      const notice = document.getElementById('qb-extra-ship-notice');
-      if (region !== '일반') {
-        notice.textContent = `${region} 지역 추가배송비 ${qb_formatPrice(EXTRA_SHIP[region])}이 적용됩니다.`;
-        notice.style.display = 'block';
-      } else {
-        notice.style.display = 'none';
-      }
-      qb_updatePriceBar();
-    }
-
-    function qb_checkCustomerForm() {
+function qb_checkCustomerForm() {
       const name = document.getElementById('qb-name').value.trim();
       const phone = document.getElementById('qb-phone').value.trim();
       const btn = document.getElementById('qb-step8-next');
@@ -2472,7 +2412,6 @@
     function qb_validateCustomerInfo() {
       qb_state.customerName = document.getElementById('qb-name').value.trim();
       qb_state.customerPhone = document.getElementById('qb-phone').value.trim();
-      qb_state.selectedRegion = document.getElementById('qb-region').value;
 
       return qb_state.customerName && qb_state.customerPhone;
     }
@@ -2491,7 +2430,7 @@
       const prod = PRODUCTS[qb_state.selectedSeries];
       const sizeData = prod.sizes[qb_state.selectedSize];
       let productPrice = sizeData.price;
-      let shippingPrice = sizeData.ship + (EXTRA_SHIP[qb_state.selectedRegion] || 0);
+      let shippingPrice = sizeData.ship;
 
       if (qb_state.selectedAdPanel !== null) {
         productPrice += AD_PANELS[qb_state.selectedAdPanel].price;
@@ -2513,7 +2452,6 @@
         notes: qb_state.notes,
         customerName: qb_state.customerName,
         customerPhone: qb_state.customerPhone,
-        region: qb_state.selectedRegion,
         productPrice: productPrice,
         shippingPrice: shippingPrice,
         totalPrice: total,
