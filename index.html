@@ -1443,16 +1443,16 @@
       },
       "우드": {
         sizes: {"1구":{price:32000,ship:5000},"2구":{price:39900,ship:5000},"3구":{price:46000,ship:6000},"4구":{price:57000,ship:6000},"6구":{price:71000,ship:7000},"8구":{price:84500,ship:10000},"10구":{price:115000,ship:12000}},
-        hasType:true, hasAdPanel:true, hasDesign:true, hasColor:true,
+        hasType:true, hasAdPanel:true, hasDesign:true, hasColor:true, designType:"wood",
         adPanelSet:"standard",
         typeOptions:[{name:"집게형",delta:0},{name:"포켓형",delta:24000},{name:"덮개형",delta:24000}],
-        colorOptions:["베이지","황토","체리","진밤색","월넛"],
+        colorOptions:["주황","회색","아이보리","연분홍","페브릭녹색","연파랑","나이렉스군청색","나이렉스녹색","나이렉스청색"],
         addons:[],requireNote:false,
         desc:"원목 느낌의 따뜻한 분위기"
       },
       "알루미늄": {
         sizes: {"1구":{price:32000,ship:5000},"2구":{price:39900,ship:5000},"3구":{price:46000,ship:6000},"4구":{price:57000,ship:6000},"6구":{price:71000,ship:7000},"8구":{price:84500,ship:10000},"10구":{price:115000,ship:12000}},
-        hasType:true, hasAdPanel:true, hasDesign:false,
+        hasType:true, hasAdPanel:true, hasDesign:true, designType:"alum",
         adPanelSet:"standard",
         typeOptions:[{name:"집게형",delta:0},{name:"포켓형",delta:7900},{name:"덮개형",delta:7900}],
         addons:[],requireNote:false,
@@ -1536,6 +1536,22 @@
 
     // 안전강화유리 게시판 디자인 11종 (2025/04/03)
     const ACRYL_GLASS_DESIGNS = ["2025/04/03/0450ba6d3ba02c5f5d26396643088b8802f48b65.png","2025/04/03/5f66c0d583c68ed40229312ea9391bd2869470bd.png","2025/04/03/97d954b99f6e46ad999c676f2b378c1035e19dfc.png","2025/04/03/6e7000b098e8b795df51312c34a9be0c4a0566fe.png","2025/04/03/4aff7c8aa0f2b893c91cf7a9f212d641aef4ab69.png","2025/04/03/93ff70e6e0faedfc5d43bd4b1352ec5e5010c0d4.png","2025/04/03/df95f9a180659d69bc9415566781677a55235bc0.png","2025/04/03/4657a3bd9e77f78afd3c3822ab707ad85979d946.png","2025/04/03/b98b75a435e779f000b9a0fd697517dc15b62417.png","2025/04/03/7ce9a3425f93a679dd404a027f8b35ec66842125.png","2025/04/03/b0ea34358215639a3187579e45142180ec431f59.png"];
+
+    // 알루미늄 게시판 디자인 9종 (2025/04/03)
+    const ALUM_DESIGNS = ["2025/04/03/c383f7deebee9a3d7a2336a7c44a040c3519442c.png","2025/04/03/9a90e399294ca12c7ee564d14c518b68c6dc81dc.png","2025/04/03/ccda7eccb8e5f41fd67d7374081b2085dbf8a330.png","2025/04/03/b3e4b264553fa2e6ccac1daed2215f135b5e8249.png","2025/04/03/312d65340c8c8d3bb8825079a9302486d754b7af.png","2025/04/03/d98ab4c6384b713375df795b1dd2697fc8240285.png","2025/04/03/1e1061843cbcf04a9f9df746320c5bf843b4449d.png","2025/04/03/ac56605f4a6459ce4dac8db62ab583fdde513ee2.png","2025/04/03/4488579bde3af30822cf94cf50ca4e4f12919bbd.png"];
+
+    // 우드 게시판 배경원단 이미지 9종 (2024/04/26)
+    const WOOD_COLOR_IMAGES = {
+      "주황":     "2024/04/26/f933e6a19908d5e9cff75cfb92fb51ba8fadc258.png",
+      "회색":     "2024/04/26/de9a3cae3a7ddcb66a799c91b5c10f0826c3dd58.png",
+      "아이보리": "2024/04/26/1e58ee31d1b7868b3dd1a141d7225bf80369d17e.png",
+      "연분홍":   "2024/04/26/8159921bd08f69249cff1ec76ae17aa7d3a48793.png",
+      "페브릭녹색":"2024/04/26/5b4865547aa2f917fea971d15d4059d716db322f.png",
+      "연파랑":   "2024/04/26/281ea6edf168bb08ac756a3a4845794f7dcb0b33.png",
+      "나이렉스군청색":"2024/04/26/f32fb6faf87ad4bbf159651d3a0793d82f9e6823.png",
+      "나이렉스녹색":"2024/04/26/e9022ef7eaa69b8a4b8ff49961adccc51aa74be2.png",
+      "나이렉스청색":"2024/04/26/718f8ea85c97feb0a9282a28e640c2c8dc85e716.png"
+    };
 
     // 슬림자석 게시판 디자인 86종 (2024/07/11)
     const SLIM_MAG_DESIGNS = ["2024/07/11/fd8fbe5daa4853658d022c503f38598e7d931373.png","2024/07/11/91c17bc8fa6c6fc162b6c0e22627e2d89a7c0659.png","2024/07/11/2395ee4ac652253ec2c14a2cfc0d9fde839e667f.png","2024/07/11/6aeffeebdb2ac714998c0318ba33561aeadf831e.png","2024/07/11/8b2432de4c255861d6b6b81c2987f31f9b99efed.png","2024/07/11/cb1115d8f9fc3c1ee2db9d140aff4f488bc94642.png","2024/07/11/fc5e2cc4ea036e5d005e2db03c438ed8c514953e.png","2024/07/11/3278258ae85846ab846e16923cafdf913caaae83.png","2024/07/11/2f32e3e0af727d76ac11f9caf6140f67caba3f61.png","2024/07/11/a685b1252a81c9d792a8f9e42ba5a8692f03db0d.png","2024/07/11/78e18ed6e3fe8ff3f998fbe7d69cd95062af7560.png","2024/07/11/55cd9309458fae275169e65a8ac8b30730aa31ea.png","2024/07/11/2b9144ac7691392858c073878b6299c8fbea9f43.png","2024/07/11/b031341e6b41e8b9ab2f4a65f15f28f9c9348385.png","2024/07/11/07f9e0c6cfb7c27e649623dbeab9fb65b624b502.png","2024/07/11/b292d8a9523f35256c7358226a9905d9cf27c642.png","2024/07/11/fb54d26ce37dd76488192ba13f1f4f752cdda614.png","2024/07/11/af2ea847be7f7bec372becd0e9450fcae83dfd69.png","2024/07/11/293e2a39b2fb0f9502a27f3c9b8a9f78ec083f80.png","2024/07/11/3720ffc9c44753045421ef2fac2ad1ecaa68fcdf.png","2024/07/11/b069db806a5f39c45dc86b5edbc582af62e2063d.png","2024/07/11/b93c6e799369c1a806a74021a96722bc04e3ee64.png","2024/07/11/28722d143915e9cd834c183675915576213a6247.png","2024/07/11/a4f9e3b34faf0b36ab49d18e9f45690c67b6a56a.png","2024/07/11/0a9fb301b13f34661f7787521b18d05cf9979b69.png","2024/07/11/5c8150a9c44503fbd3410b63a514f5e6ca85691d.png","2024/07/11/27a828e5904ee84d66a9195ceab9b66b9e7d61a9.png","2024/07/11/bdfe972422beb09463d77aa46c56c47cba159148.png","2024/07/11/9554102a6d036226acaff3d14ffa1f41207e5514.png","2024/07/11/1f2a10e5e8e7c449b9b528b9b96b6aba4b5842d6.png","2024/07/11/17163dd138047b611d22db5b54f2df90af4d4d1c.png","2024/07/11/c559a8d3ce1f1800ff51c53c96166e00b5c02b76.png","2024/07/11/657cda605e2f6b7f798aa3cac52f95e223a073c9.png","2024/07/11/4f7116a000a41e698f984e604f4129608b17d0b2.png","2024/07/11/aec21ecb983c02af31e5da55b273cdb89b60f142.png","2024/07/11/2301abff87f239d522b7989758226e5be245cf8a.png","2024/07/11/bf0886a44d0139788a9cc80e211b2ff5b5562787.png","2024/07/11/b3b23ce3622ac148b82d1587456ebbede1bc7e07.png","2024/07/11/edfe1607f795a4ba61fb70d7fe90e0b3b77a5848.png","2024/07/11/8e03aa4c13de22fbb2bb012e0f9fe4ea2a2ea590.png","2024/07/11/cb25e02c216cdaae8c58637fb9502c228cd85fd5.png","2024/07/11/4076bb696942c480ffeb842aedca61d9c341ccb3.png","2024/07/11/9b567255e2a96428db19132b79117b3e836ff1bb.png","2024/07/11/0f6b34c3c45dd0ec147ea7387a4ee7f9faa24717.png","2024/07/11/89c2e6c0f04e82d0117f671bbc432edbb553d95a.png","2024/07/11/4b0afe4f472b0368e7dc9ae1a10561934b17f839.png","2024/07/11/9a60cc92881ba2919e2fce5c1e1f365af5a8878e.png","2024/07/11/b549cac9c6ebac322436900b44ff37def37ab52d.png","2024/07/11/3ce2b0d36ae911f93a091568d510a7b8b735fbcc.png","2024/07/11/9ccee34074c4d836e8a3d93ba289d418a4d9723e.png","2024/07/11/babe605100ac6aab476f7c31d1a8735f6afd95db.png","2024/07/11/9a1843357ee22c30d8ee7d772ed96c5d4ea65e3b.png","2024/07/11/fa353b5bbefa0305e82e8fb6ba4b4600718f9643.png","2024/07/11/9e35362d6876e9678361bb53b6af1bca08cf11c1.png","2024/07/11/44731983b330c6e55bce97c746f778425e3440ce.png","2024/07/11/e7ec395ee8f1c5670b29025bdd071fd985333f06.png","2024/07/11/04b1fecaf3940f87e3a3cc08436f08698b78d18b.png","2024/07/11/bff85cd2de253c38133938463536504f6186159b.png","2024/07/11/578b421a71a679e3efca22a1dcf9a533929ff375.png","2024/07/11/68a63e4f622b19529d3330895c0b9be2c3d91a13.png","2024/07/11/b5991f5aa793b25d21a0031b98aef60819c9b1ea.png","2024/07/11/9ee7ac4c12600cbf36b463e6a963791b038d5a56.png","2024/07/11/ae9f2e3eb4775e8441732f47f2378cb4cee80a35.png","2024/07/11/7b58d42d3a3916ccceecc75f5b4f1e764118cbc9.png","2024/07/11/ad31bf0699a088d7b493017c29e4b6621ee0a282.png","2024/07/11/0a99d26d810ffd713e36fc3827bad9320ee28578.png","2024/07/11/88adde006c0c5413bd8ac301af02e5beb663f6b0.png","2024/07/11/d3e61c9c6ece6709edc06367516dadd4c675ca30.png","2024/07/11/3b81b13217f77b6df2094266f1249b1548032980.png","2024/07/11/ac9c27256f2cd579e75150c24aeb681c185fd356.png","2024/07/11/e1878774ae19d59663b8e500a2389710c0eb4c1f.png","2024/07/11/b766b606bba57eb3287acc546c1c4ad4851f3ce2.png","2024/07/11/f25ee0d5fdeee065891f4f158df311ce84324560.png","2024/07/11/d1f3b775a06b5cc809ae188fc89bd7253abf94b2.png","2024/07/11/9fdcb4587b6deb12b145c6cf6275d43196a7f132.png","2024/07/11/537d575b84691b1f4718bdbd776d051fe44a345a.png","2024/07/11/4986ace1589dfc7443cac34ce0847c80f24c7b6e.png","2024/07/11/4e12898b1625095233f226fc37d9278bfad46e9e.png","2024/07/11/5be7e7a9583c0f7f180cee3c88a4fe33c2b2687f.png","2024/07/11/4ed225e3d415de2d2e368550dd92dbe94545bf2b.png","2024/07/11/3b363fc1dffab24dc9deb265fd7ff9f6bea7af0f.png","2024/07/11/fabe64e20d9d0357f2d1ff53ad1deb82405130ba.png","2024/07/11/68247cb06c09d9b29a7f946833a09b1df5e5767f.png","2024/07/11/7fc23db1457c06015964f6218a15f7c6f9d62ea9.png","2024/07/11/d9d86d5b17e9b3e23be8e1da54534d85d97ab356.png","2024/07/11/5073e8a539a0578d14c65f9c69672a3e62a41a70.png"];
@@ -1693,27 +1709,44 @@
       return num.toLocaleString('ko-KR') + '원';
     }
 
+    // 현재 상품에서 실제로 거치는 절대 스텝 번호 배열 반환
+    function qb_getActiveSteps() {
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const steps = [1, 2];
+      if (prod) {
+        if (prod.hasType) steps.push(3);
+        if (prod.hasAdPanel) steps.push(4);
+        if (prod.hasDesign) steps.push(5);
+        if (prod.addons && prod.addons.length > 0) steps.push(6);
+      } else {
+        steps.push(3, 4, 5, 6);
+      }
+      steps.push(7, 8, 9);
+      return steps;
+    }
+
     function qb_updateStepIndicator() {
-      const total = qb_state.totalSteps;
+      const activeSteps = qb_getActiveSteps();
       const current = qb_state.currentStep;
       const el = document.getElementById('qb-progress');
       if (!el) return;
 
-      // Build step label map based on current product
       const labels = qb_getStepLabels();
+      const total = activeSteps.length;
 
       let html = '';
-      for (let i = 1; i <= total; i++) {
-        let cls = i < current ? 'done' : i === current ? 'current' : 'upcoming';
-        let label = labels[i] || '';
+      activeSteps.forEach((absStep, idx) => {
+        const pos = idx + 1; // 표시 순번 (1부터)
+        let cls = absStep < current ? 'done' : absStep === current ? 'current' : 'upcoming';
+        let label = labels[pos] || '';
         html += '<div class="qb-progress-item">';
-        html += '<div class="qb-progress-step ' + cls + '">' + i + '</div>';
+        html += '<div class="qb-progress-step ' + cls + '">' + pos + '</div>';
         html += '<div class="qb-progress-label ' + cls + '">' + label + '</div>';
         html += '</div>';
-        if (i < total) {
-          html += '<div class="qb-progress-line ' + (i < current ? 'done' : 'upcoming') + '"></div>';
+        if (idx < total - 1) {
+          html += '<div class="qb-progress-line ' + (absStep < current ? 'done' : 'upcoming') + '"></div>';
         }
-      }
+      });
       el.innerHTML = html;
     }
 
@@ -1963,8 +1996,8 @@
       }
 
       // 번호형 디자인 (아크릴/슬림자석/크리스탈: 순번 이미지 그리드)
-      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass') {
-        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : ACRYL_GLASS_DESIGNS;
+      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
+        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : ALUM_DESIGNS;
         document.getElementById('qb-design-category-tabs').innerHTML = `<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">배경 디자인을 선택하세요 (총 ${designs.length}종)</p>`;
         document.getElementById('qb-design-grid').style.display = '';
         document.getElementById('qb-design-grid').style.flexDirection = '';
@@ -1992,27 +2025,28 @@
         return;
       }
 
-      // 색상 선택형 - colorImages 없고 hasColor만 있는 경우 (우드: 이미지 없이 텍스트 카드)
-      if (prod.hasColor && prod.colorOptions) {
-        document.getElementById('qb-design-category-tabs').innerHTML = '<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">색상을 선택하세요</p>';
+      // 배경원단 이미지 선택형 (우드: WOOD_COLOR_IMAGES 이미지 카드)
+      if (prod.designType === 'wood' && prod.colorOptions) {
+        document.getElementById('qb-design-category-tabs').innerHTML = `<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">배경원단 색상을 선택하세요 (총 ${prod.colorOptions.length}종)</p>`;
+        document.getElementById('qb-design-grid').style.display = '';
+        document.getElementById('qb-design-grid').style.flexDirection = '';
+        document.getElementById('qb-design-grid').style.gap = '';
         let html = '';
-        prod.colorOptions.forEach(color => {
-          html += `
-            <div class="qb-card ${qb_state.selectedDesign === color ? 'selected' : ''}" onclick="qb_selectColorDesign('${color}')" style="display:flex;gap:16px;align-items:center;padding:16px;cursor:pointer">
-              <div style="flex:1">
-                <div class="qb-card-radio" style="margin-bottom:0">
-                  <div class="qb-radio"></div>
-                  <div class="qb-card-label">
-                    <div class="qb-card-title">${color}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
+        prod.colorOptions.forEach((color, i) => {
+          const imgPath = WOOD_COLOR_IMAGES[color] || '';
+          const imgUrl = imgPath ? SEQ_DESIGN_BASE + imgPath : '';
+          const numLabel = String(i + 1).padStart(2, '0');
+          const isSelected = qb_state.selectedDesign === ('wood_' + numLabel);
+          html += `<div class="qb-design-thumb ${isSelected ? 'selected' : ''}" onclick="qb_selectSeqDesign('wood_${numLabel}', this)">`;
+          if (imgUrl) {
+            html += `<div style="position:relative">`;
+            html += `<img src="${imgUrl}" alt="${color}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px 4px 0 0">`;
+            html += `<div class="qb-design-zoom-icon" onclick="qb_openZoom('wood_${numLabel}', event)">🔍</div>`;
+            html += `</div>`;
+          }
+          html += `<div style="text-align:center;padding:4px 2px;font-size:11px;line-height:1.3">${color}</div>`;
+          html += '</div>';
         });
-        document.getElementById('qb-design-grid').style.display = 'flex';
-        document.getElementById('qb-design-grid').style.flexDirection = 'column';
-        document.getElementById('qb-design-grid').style.gap = '12px';
         document.getElementById('qb-design-grid').innerHTML = html;
         document.getElementById('qb-step5-next').disabled = !qb_state.selectedDesign;
         return;
@@ -2107,15 +2141,25 @@
 
       const prod = PRODUCTS[qb_state.selectedSeries];
 
-      // 번호형 디자인 (아크릴/슬림자석/크리스탈)
-      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass') {
-        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : ACRYL_GLASS_DESIGNS;
+      // 번호형 디자인 (아크릴/슬림자석/크리스탈/안전강화유리/알루미늄)
+      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
+        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : ALUM_DESIGNS;
         designs.forEach((path, idx) => {
           const num = String(idx + 1).padStart(2, '0');
           const key = prod.designType + '_' + num;
           const img = SEQ_DESIGN_BASE + path;
           if (key === designKey) qb_state.zoomCurrentDesign = qb_state.zoomDesigns.length;
           qb_state.zoomDesigns.push({key, hash: path, img});
+        });
+      } else if (prod.designType === 'wood') {
+        // 우드 배경원단
+        prod.colorOptions.forEach((color, idx) => {
+          const num = String(idx + 1).padStart(2, '0');
+          const key = 'wood_' + num;
+          const path = WOOD_COLOR_IMAGES[color] || '';
+          const img = path ? SEQ_DESIGN_BASE + path : '';
+          if (key === designKey) qb_state.zoomCurrentDesign = qb_state.zoomDesigns.length;
+          qb_state.zoomDesigns.push({key, hash: path, img, label: color});
         });
       } else {
         const cats = prod.designCats === 'standard' ? DESIGN_CATS_STANDARD : DESIGN_CATS_EXTENDED;
@@ -2352,22 +2396,25 @@
         const designKey = qb_state.selectedDesign;
         let designImgUrl = '';
         let designLabel = '디자인';
-        if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass') {
-          // 번호형 (아크릴/슬림자석/크리스탈/안전강화유리): SEQ_DESIGN_BASE + 배열 경로
-          const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : ACRYL_GLASS_DESIGNS;
+        if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
+          // 번호형 (아크릴/슬림자석/크리스탈/안전강화유리/알루미늄): SEQ_DESIGN_BASE + 배열 경로
+          const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : ALUM_DESIGNS;
           const numStr = designKey.split('_')[1]; // 'acryl_01' → '01'
           const idx = parseInt(numStr, 10) - 1;
           designImgUrl = (idx >= 0 && designs[idx]) ? SEQ_DESIGN_BASE + designs[idx] : '';
+        } else if (prod.designType === 'wood') {
+          // 배경원단 선택형 (우드): WOOD_COLOR_IMAGES에서 이미지
+          designLabel = '배경원단';
+          const numStr = designKey.split('_')[1]; // 'wood_01' → '01'
+          const idx = parseInt(numStr, 10) - 1;
+          const colorName = prod.colorOptions && prod.colorOptions[idx] ? prod.colorOptions[idx] : '';
+          designImgUrl = (colorName && WOOD_COLOR_IMAGES[colorName]) ? SEQ_DESIGN_BASE + WOOD_COLOR_IMAGES[colorName] : '';
         } else if (prod.colorImages) {
           // 색상 선택형 (슬림안전보건): colorImages에서 이미지 가져오기
           designLabel = '색상';
           const sizeImgs = prod.colorImages[qb_state.selectedSize] || {};
           const typeImgs = sizeImgs[qb_state.selectedType] || {};
           designImgUrl = typeImgs[designKey] || '';
-        } else if (prod.hasColor && prod.colorOptions) {
-          // 색상 선택형 (우드 등): 이미지 없이 텍스트만
-          designLabel = '색상';
-          designImgUrl = '';
         } else {
           designImgUrl = (designKey && DM[designKey]) ? DESIGN_BASE + DM[designKey] : '';
         }
@@ -2479,82 +2526,33 @@
       }
     }
 
-    function qb_nextStep() {
-      const prod = PRODUCTS[qb_state.selectedSeries];
-      const stepMap = [
-        null,
-        () => { qb_state.currentStep = 2; qb_renderSizeSelection(); },
-        () => {
-          if (prod.hasType) {
-            qb_state.currentStep = 3;
-            qb_renderTypeSelection();
-          } else if (prod.hasAdPanel) {
-            qb_state.currentStep = 4;
-            qb_renderAdPanels();
-          } else if (prod.hasDesign) {
-            qb_state.currentStep = 5;
-            qb_renderDesignSelection();
-          } else if (prod.addons && prod.addons.length > 0) {
-            qb_state.currentStep = 6;
-            qb_renderAddons();
-          } else {
-            qb_state.currentStep = 7;
-          }
-        },
-        () => {
-          if (prod.hasAdPanel) {
-            qb_state.currentStep = 4;
-            qb_renderAdPanels();
-          } else if (prod.hasDesign) {
-            qb_state.currentStep = 5;
-            qb_renderDesignSelection();
-          } else if (prod.addons && prod.addons.length > 0) {
-            qb_state.currentStep = 6;
-            qb_renderAddons();
-          } else {
-            qb_state.currentStep = 7;
-          }
-        },
-        () => {
-          if (prod.hasDesign) {
-            qb_state.currentStep = 5;
-            qb_renderDesignSelection();
-          } else if (prod.addons && prod.addons.length > 0) {
-            qb_state.currentStep = 6;
-            qb_renderAddons();
-          } else {
-            qb_state.currentStep = 7;
-          }
-        },
-        () => {
-          if (prod.addons && prod.addons.length > 0) {
-            qb_state.currentStep = 6;
-            qb_renderAddons();
-          } else {
-            qb_state.currentStep = 7;
-          }
-        },
-        () => {
-          qb_state.currentStep = 7;
-        },
-        () => {
-          qb_state.currentStep = 8;
-        },
-        () => {
-          qb_state.currentStep = 9;
-          qb_renderConfirmation();
-        }
-      ];
+    // 스텝 이동 시 렌더 함수 호출 (절대 스텝 번호 기준)
+    function qb_renderStep(stepNum) {
+      if (stepNum === 2) qb_renderSizeSelection();
+      else if (stepNum === 3) qb_renderTypeSelection();
+      else if (stepNum === 4) qb_renderAdPanels();
+      else if (stepNum === 5) qb_renderDesignSelection();
+      else if (stepNum === 6) qb_renderAddons();
+      else if (stepNum === 9) qb_renderConfirmation();
+    }
 
-      if (stepMap[qb_state.currentStep]) {
-        stepMap[qb_state.currentStep]();
+    function qb_nextStep() {
+      const active = qb_getActiveSteps();
+      const idx = active.indexOf(qb_state.currentStep);
+      if (idx >= 0 && idx < active.length - 1) {
+        qb_state.currentStep = active[idx + 1];
+        qb_renderStep(qb_state.currentStep);
       }
 
       qb_showStep();
     }
 
     function qb_prevStep() {
-      qb_state.currentStep--;
+      const active = qb_getActiveSteps();
+      const idx = active.indexOf(qb_state.currentStep);
+      if (idx > 0) {
+        qb_state.currentStep = active[idx - 1];
+      }
       qb_showStep();
     }
 
