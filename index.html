@@ -1460,9 +1460,19 @@
       },
       "슬림안전보건": {
         sizes: {"8구":{price:141300,ship:28000},"10구":{price:159400,ship:28000}},
-        hasType:true, hasAdPanel:false, hasDesign:false, hasColor:true,
+        hasType:true, hasAdPanel:false, hasDesign:true, hasColor:true,
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0}],
         colorOptions:["골드","실버","블랙"],
+        colorImages:{
+          "8구":{
+            "포켓형":{"골드":IMG_BASE+"/2025/01/14/0ef898d19527af54233b5c87e58884d7335d4fd5.png","실버":IMG_BASE+"/2025/01/14/c3f4324a1ec86569aa829be0c8f166435c467c71.png","블랙":IMG_BASE+"/2025/01/14/88a7f4e0e755566fc0a294880fd57c6f3c3f56e3.png"},
+            "집게형":{"골드":IMG_BASE+"/2025/01/14/43a5c9b3b98a4b245ab4d8c64613639ccce99e26.png","실버":IMG_BASE+"/2025/01/14/877170ce698a1c5c52cb9166e34bf415110f206b.png","블랙":IMG_BASE+"/2025/01/14/e5fd54b9281e321ea126bdd624ca8d955b8bc67b.png"}
+          },
+          "10구":{
+            "포켓형":{"골드":IMG_BASE+"/2025/01/14/8786b9e7f08f63d6a45c0519e4340b1a99ca0dbc.png","실버":IMG_BASE+"/2025/01/14/bb8f46875b33b116ec2f6401d1d2ba8d507af856.png","블랙":IMG_BASE+"/2025/01/14/f833bee83fb7f8db6bf66f44cacd9a9d3a974da0.png"},
+            "집게형":{"골드":IMG_BASE+"/2025/01/14/83e0f105326252928bc544f9dc98483c95f28f01.png","실버":IMG_BASE+"/2025/01/14/e261c8b84da094f1065d35f4b97cada84cc4ae27.png","블랙":IMG_BASE+"/2025/01/14/b55cace7b706de97d043423ecb6c8c46947f5eea.png"}
+          }
+        },
         addons:[{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],requireNote:false,
         desc:"안전보건 법령 게시용 슬림디자인 게시판"
       },
@@ -1623,8 +1633,8 @@
         "10구": IMG_BASE + "/2025/03/28/997d51b580ab7d249456db1b9a0f5bbeeae4af01.jpg"
       },
       "슬림안전보건": {
-        "8구": IMG_BASE + "/2025/01/08/3cd9f09470b8881503353f50cd0d758150a192f7.jpg",
-        "10구": IMG_BASE + "/2025/01/08/3cd9f09470b8881503353f50cd0d758150a192f7.jpg"
+        "8구": IMG_BASE + "/2025/01/14/0ef898d19527af54233b5c87e58884d7335d4fd5.png",
+        "10구": IMG_BASE + "/2025/01/14/8786b9e7f08f63d6a45c0519e4340b1a99ca0dbc.png"
       },
       "산업안전보건": {
         "1구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
@@ -1840,12 +1850,13 @@
     }
 
     function qb_renderTypeSelection() {
-      const types = Object.keys(TYPE_IMAGES);
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const types = (prod && prod.typeOptions) ? prod.typeOptions.map(t => t.name) : Object.keys(TYPE_IMAGES);
       let html = '';
 
       types.forEach(type => {
-        const img = TYPE_IMAGES[type];
-        const desc = TYPE_DESC[type];
+        const img = TYPE_IMAGES[type] || '';
+        const desc = TYPE_DESC[type] || '';
         html += `
           <div class="qb-card ${qb_state.selectedType === type ? 'selected' : ''}" onclick="qb_selectType('${type}')" style="display:flex;gap:16px;align-items:center;padding:12px">
             <img src="${img}" alt="${type}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;cursor:zoom-in;background:#1e1e38;border:1px solid #353560" onerror="this.onerror=null;this.alt='${type}'" onclick="event.stopPropagation();qb_showImageZoom('${img}','${type}')">
@@ -1906,6 +1917,42 @@
 
     function qb_renderDesignSelection() {
       const prod = PRODUCTS[qb_state.selectedSeries];
+
+      // 색상 선택형 (colorImages가 있는 제품: 슬림안전보건 등)
+      if (prod.colorImages) {
+        const sizeImgs = prod.colorImages[qb_state.selectedSize] || {};
+        const typeImgs = sizeImgs[qb_state.selectedType] || {};
+        const colors = prod.colorOptions || [];
+        document.getElementById('qb-design-category-tabs').innerHTML = '<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">색상을 선택하세요</p>';
+        let html = '';
+        colors.forEach(color => {
+          const img = typeImgs[color] || '';
+          html += `
+            <div class="qb-card ${qb_state.selectedDesign === color ? 'selected' : ''}" onclick="qb_selectColorDesign('${color}')" style="display:flex;gap:16px;align-items:center;padding:12px;cursor:pointer">
+              ${img ? `<img src="${img}" alt="${color}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#1e1e38;border:1px solid #353560" onerror="this.onerror=null;this.style.display='none'">` : ''}
+              <div style="flex:1">
+                <div class="qb-card-radio" style="margin-bottom:0">
+                  <div class="qb-radio"></div>
+                  <div class="qb-card-label">
+                    <div class="qb-card-title">${color}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        document.getElementById('qb-design-grid').style.display = 'flex';
+        document.getElementById('qb-design-grid').style.flexDirection = 'column';
+        document.getElementById('qb-design-grid').style.gap = '12px';
+        document.getElementById('qb-design-grid').innerHTML = html;
+        document.getElementById('qb-step5-next').disabled = !qb_state.selectedDesign;
+        return;
+      }
+
+      // 기존 디자인 카테고리 방식
+      document.getElementById('qb-design-grid').style.display = '';
+      document.getElementById('qb-design-grid').style.flexDirection = '';
+      document.getElementById('qb-design-grid').style.gap = '';
       const cats = prod.designCats === 'standard' ? DESIGN_CATS_STANDARD : DESIGN_CATS_EXTENDED;
 
       let html = '<div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">';
@@ -1918,6 +1965,11 @@
 
       const firstCat = Object.keys(cats)[0];
       qb_switchDesignCat(firstCat);
+    }
+
+    function qb_selectColorDesign(color) {
+      qb_state.selectedDesign = color;
+      qb_renderDesignSelection();
     }
 
     function qb_switchDesignCat(cat) {
@@ -2216,13 +2268,23 @@
         `;
       }
 
-      // Design
+      // Design (색상형 또는 일반 디자인)
       if (prod.hasDesign && qb_state.selectedDesign) {
         const designKey = qb_state.selectedDesign;
-        const designImgUrl = (designKey && DM[designKey]) ? DESIGN_BASE + DM[designKey] : '';
+        let designImgUrl = '';
+        let designLabel = '디자인';
+        if (prod.colorImages) {
+          // 색상 선택형: colorImages에서 이미지 가져오기
+          designLabel = '색상';
+          const sizeImgs = prod.colorImages[qb_state.selectedSize] || {};
+          const typeImgs = sizeImgs[qb_state.selectedType] || {};
+          designImgUrl = typeImgs[designKey] || '';
+        } else {
+          designImgUrl = (designKey && DM[designKey]) ? DESIGN_BASE + DM[designKey] : '';
+        }
         html += `
           <div class="qb-confirmation-row">
-            <div class="qb-confirmation-label">디자인</div>
+            <div class="qb-confirmation-label">${designLabel}</div>
             <div class="qb-confirmation-value">
               ${designImgUrl ? '<img src="' + designImgUrl + '" alt="' + designKey + '" class="qb-confirmation-image">' : ''}
               <div class="qb-confirmation-text">${qb_state.selectedDesign}</div>
