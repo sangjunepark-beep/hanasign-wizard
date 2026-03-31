@@ -1189,13 +1189,13 @@
 
     <!-- STEP 7: Request Notes -->
     <div id="qb-step-7" class="qb-step-content">
-      <h1 class="qb-step-title">요청사항이 있으신가요?</h1>
-      <p class="qb-step-subtitle">배송 및 제작 시 특별한 요청사항이 있으면 입력하세요 <span style="color:#6a6a88;font-size:12px;">(선택)</span></p>
+      <h1 class="qb-step-title">요청사항</h1>
+      <p class="qb-step-subtitle">배송 및 제작 시 요청사항이 있으면 입력하세요</p>
 
       <div id="qb-notes-container">
         <div class="qb-input-group">
-          <label class="qb-label" id="qb-notes-label">특별 요청사항 <span style="color:#6a6a88;font-size:11px;">(선택사항)</span></label>
-          <textarea id="qb-notes" placeholder="예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등..." oninput="this.style.border=''"></textarea>
+          <label class="qb-label">요청사항</label>
+          <textarea id="qb-notes" placeholder="예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등..."></textarea>
         </div>
       </div>
 
@@ -1403,7 +1403,7 @@
         adPanelSet:"슬림업",
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0},{name:"덮개형",delta:0}],
         addons:[{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],
-        requireNote:true,
+        requireNote:false,
         desc:"가장 인기 있는 슬림형. 포켓/집게/덮개 타입 선택 가능"
       },
       "슬림디자인": {
@@ -1412,7 +1412,7 @@
         adPanelSet:"standard",
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0},{name:"덮개형",delta:0}],
         addons:[{name:"메탈스카시",price:20000},{name:"고리추가 2개",price:2000}],
-        requireNote:true,
+        requireNote:false,
         desc:"디자인 시트지 마감으로 고급스러운 외관"
       },
       "안전강화유리": {
@@ -1487,7 +1487,7 @@
       "산업안전보건": {
         sizes: {"1구":{price:72000,ship:0,islandShip:6000},"2구":{price:82000,ship:0,islandShip:6000},"3구":{price:94500,ship:0,islandShip:6000},"4구(가로)":{price:110500,ship:0,islandShip:6000},"4구(세로)":{price:131500,ship:0,islandShip:6000},"6구":{price:132100,ship:0,islandShip:6000}},
         hasType:false, hasAdPanel:false, hasDesign:false,
-        addons:[],requireNote:true,
+        addons:[],requireNote:false,
         desc:"산업안전보건법 의무 게시 전용"
       },
       "갈바": {
@@ -2624,25 +2624,7 @@
         el.classList.remove('active');
       });
 
-      // Step 7: requireNote에 따라 타이틀/부제목/필수 표시 동적 변경
-      if (qb_state.currentStep === 7 && qb_state.selectedSeries) {
-        const prod = PRODUCTS[qb_state.selectedSeries];
-        const titleEl = document.querySelector('#qb-step-7 .qb-step-title');
-        const subtitleEl = document.querySelector('#qb-step-7 .qb-step-subtitle');
-        const notesEl = document.getElementById('qb-notes');
-        const labelEl = document.getElementById('qb-notes-label');
-        if (prod && prod.requireNote) {
-          if (titleEl) titleEl.textContent = '요청사항을 입력해주세요';
-          if (subtitleEl) subtitleEl.innerHTML = '이 제품은 요청사항 입력이 <span style="color:#ff6b6b;font-weight:700;">필수</span>입니다 (예: 게시 내용, 디자인 요청 등)';
-          if (labelEl) labelEl.innerHTML = '특별 요청사항 <span style="color:#ff6b6b;font-size:11px;">(필수)</span>';
-          if (notesEl) notesEl.placeholder = '필수 입력: 게시 내용, 디자인 요청, 규격 변경 등을 입력해주세요';
-        } else {
-          if (titleEl) titleEl.textContent = '요청사항이 있으신가요?';
-          if (subtitleEl) subtitleEl.innerHTML = '배송 및 제작 시 특별한 요청사항이 있으면 입력하세요 <span style="color:#6a6a88;font-size:12px;">(선택)</span>';
-          if (labelEl) labelEl.innerHTML = '특별 요청사항 <span style="color:#6a6a88;font-size:11px;">(선택사항)</span>';
-          if (notesEl) notesEl.placeholder = '예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등...';
-        }
-      }
+      // Step 7: 요청사항은 모든 제품 선택사항
 
       document.getElementById(`qb-step-${qb_state.currentStep}`).classList.add('active');
       qb_updateStepIndicator();
@@ -2766,16 +2748,7 @@ function qb_checkCustomerForm() {
     document.getElementById('qb-step5-next').addEventListener('click', qb_nextStep);
     document.getElementById('qb-step6-next').addEventListener('click', qb_nextStep);
     document.getElementById('qb-step7-next').addEventListener('click', () => {
-      const notes = document.getElementById('qb-notes').value.trim();
-      const prod = PRODUCTS[qb_state.selectedSeries];
-      if (prod && prod.requireNote && !notes) {
-        const ta = document.getElementById('qb-notes');
-        ta.style.border = '2px solid #ff6b6b';
-        ta.focus();
-        ta.setAttribute('placeholder','필수 입력: 게시 내용, 디자인 요청, 규격 변경 등을 입력해주세요');
-        return;
-      }
-      qb_state.notes = notes;
+      qb_state.notes = document.getElementById('qb-notes').value.trim();
       qb_nextStep();
     });
 
