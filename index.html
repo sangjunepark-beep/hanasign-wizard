@@ -1122,7 +1122,7 @@
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="qb-island-check" onchange="qb_toggleIslandShip()" style="width:18px;height:18px;accent-color:#4A7BF7;">
           <span style="color:#e8e8ec;font-size:14px;font-weight:600;">제주/도서산간 지역입니다</span>
-          <span id="qb-island-price" style="color:#ff6b6b;font-size:13px;margin-left:auto;"></span>
+          <span id="qb-island-price" style="color:#ff6b6b;font-size:16px;font-weight:700;margin-left:auto;"></span>
         </label>
       </div>
 
@@ -1402,7 +1402,7 @@
         hasType:true, hasAdPanel:true, hasDesign:true, designCats:"standard",
         adPanelSet:"슬림업",
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0},{name:"덮개형",delta:0}],
-        addons:[{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],
+        addons:[{name:"강화유리 포켓 추가",price:0,pricePerUnit:2500,typeRestrict:["포켓형"]},{name:"고리추가 2개",price:2000}],
         requireNote:false,
         desc:"가장 인기 있는 슬림형. 포켓/집게/덮개 타입 선택 가능"
       },
@@ -1965,6 +1965,7 @@
       qb_state.selectedType = type;
       qb_state.selectedAdPanel = null;
       qb_state.selectedDesign = null;
+      qb_state.selectedAddons = [];
       qb_renderTypeSelection();
     }
 
@@ -2341,16 +2342,30 @@
       overlay.classList.add('active');
     }
 
+    function qb_getAddonPrice(addon) {
+      if (addon.pricePerUnit) {
+        const sizeStr = qb_state.selectedSize || '1구';
+        const units = parseInt(sizeStr) || 1;
+        return addon.pricePerUnit * units;
+      }
+      return addon.price;
+    }
+
     function qb_renderAddons() {
       const prod = PRODUCTS[qb_state.selectedSeries];
       if (!prod.addons || prod.addons.length === 0) return;
 
       let html = '';
       prod.addons.forEach((addon, idx) => {
+        const addonPrice = qb_getAddonPrice(addon);
+        const isTypeRestricted = addon.typeRestrict && !addon.typeRestrict.includes(qb_state.selectedType);
+        const disabled = isTypeRestricted;
+        const disabledStyle = disabled ? 'opacity:0.4;pointer-events:none;' : '';
+        const disabledNote = disabled ? ' <span style="color:#6a6a88;font-size:11px;">(포켓형만 선택 가능)</span>' : '';
         html += `
-          <label class="qb-checkbox">
-            <input type="checkbox" value="${idx}" onchange="qb_toggleAddon(${idx})">
-            <span class="qb-checkbox-label">${addon.name} (+${qb_formatPrice(addon.price)})</span>
+          <label class="qb-checkbox" style="${disabledStyle}">
+            <input type="checkbox" value="${idx}" onchange="qb_toggleAddon(${idx})" ${disabled ? 'disabled' : ''}>
+            <span class="qb-checkbox-label">${addon.name} (+${qb_formatPrice(addonPrice)})${disabledNote}</span>
           </label>
         `;
       });
@@ -2484,7 +2499,7 @@
 
       // Addons
       if (qb_state.selectedAddons.length > 0) {
-        let addonText = qb_state.selectedAddons.map(idx => prod.addons[idx].name).join(', ');
+        let addonText = qb_state.selectedAddons.map(idx => prod.addons[idx].name + ' (+' + qb_formatPrice(qb_getAddonPrice(prod.addons[idx])) + ')').join(', ');
         html += `
           <div class="qb-confirmation-row">
             <div class="qb-confirmation-label">추가옵션</div>
@@ -2549,7 +2564,7 @@
       }
 
       qb_state.selectedAddons.forEach(idx => {
-        productPrice += prod.addons[idx].price;
+        productPrice += qb_getAddonPrice(prod.addons[idx]);
       });
 
       const isCOD = shippingPrice === -1;
@@ -2576,7 +2591,7 @@
       }
 
       if (qb_state.selectedAddons.length > 0) {
-        const addonPrice = qb_state.selectedAddons.reduce((sum, idx) => sum + prod.addons[idx].price, 0);
+        const addonPrice = qb_state.selectedAddons.reduce((sum, idx) => sum + qb_getAddonPrice(prod.addons[idx]), 0);
         document.getElementById('qb-summary-addons-row').style.display = 'flex';
         document.getElementById('qb-summary-addons').textContent = qb_formatPrice(addonPrice);
       } else {
@@ -2676,7 +2691,7 @@ function qb_checkCustomerForm() {
       }
 
       qb_state.selectedAddons.forEach(idx => {
-        productPrice += prod.addons[idx].price;
+        productPrice += qb_getAddonPrice(prod.addons[idx]);
       });
 
       const total = productPrice + shippingPrice;
