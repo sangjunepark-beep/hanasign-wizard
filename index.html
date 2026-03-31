@@ -479,7 +479,7 @@
     }
 
     .qb-design-code {
-      font-size: 12px;
+      font-size: 16px;
       font-weight: 600;
       color: #e8e8ec;
     }
@@ -1104,7 +1104,7 @@
       </div>
 
       <div class="qb-series-group">
-        <div class="qb-series-group-title">특수 게시판</div>
+        <div class="qb-series-group-title" style="font-size:20px;color:#C0C0C0;font-weight:700;letter-spacing:1px;">특수 게시판</div>
         <div class="qb-series-grid" id="qb-special-series"></div>
       </div>
 
@@ -1119,6 +1119,14 @@
       <p class="qb-step-subtitle">게시판의 크기를 선택하면 가격이 표시됩니다</p>
 
       <div id="qb-sizes-container"></div>
+
+      <div id="qb-island-ship-container" style="display:none;margin-top:16px;padding:14px 16px;background:#1e1e38;border:1px solid #353560;border-radius:10px;">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="qb-island-check" onchange="qb_toggleIslandShip()" style="width:18px;height:18px;accent-color:#4A7BF7;">
+          <span style="color:#e8e8ec;font-size:14px;font-weight:600;">제주/도서산간 지역입니다</span>
+          <span id="qb-island-price" style="color:#ff6b6b;font-size:13px;margin-left:auto;"></span>
+        </label>
+      </div>
 
       <div class="qb-button-group">
         <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
@@ -1182,11 +1190,11 @@
     <!-- STEP 7: Request Notes -->
     <div id="qb-step-7" class="qb-step-content">
       <h1 class="qb-step-title">요청사항을 입력해주세요</h1>
-      <p class="qb-step-subtitle">배송 및 제작 시 특별한 요청사항이 있으면 입력하세요</p>
+      <p class="qb-step-subtitle">배송 및 제작 시 특별한 요청사항이 있으면 입력하세요 <span style="color:#6a6a88;font-size:12px;">(선택)</span></p>
 
       <div id="qb-notes-container">
         <div class="qb-input-group">
-          <label class="qb-label">특별 요청사항</label>
+          <label class="qb-label">특별 요청사항 <span style="color:#6a6a88;font-size:11px;">(선택사항)</span></label>
           <textarea id="qb-notes" placeholder="예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등..."></textarea>
         </div>
       </div>
@@ -1390,7 +1398,7 @@
 
     const PRODUCTS = {
       "슬림업": {
-        sizes: {"1구":{price:36000,ship:10000},"2구":{price:44000,ship:10000},"3구":{price:49000,ship:13500},"4구":{price:66500,ship:14500},"6구":{price:90000,ship:18000},"8구":{price:99000,ship:19000},"10구":{price:120000,ship:28000}},
+        sizes: {"1구":{price:36000,ship:10000,islandShip:6000},"2구":{price:44000,ship:10000,islandShip:6000},"3구":{price:49000,ship:13500,islandShip:6000},"4구":{price:66500,ship:14500,islandShip:6000},"6구":{price:90000,ship:18000,islandShip:6000},"8구":{price:99000,ship:19000,islandShip:6000},"10구":{price:120000,ship:28000,islandShip:6000}},
         hasType:true, hasAdPanel:true, hasDesign:true, designCats:"standard",
         adPanelSet:"슬림업",
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0},{name:"덮개형",delta:0}],
@@ -1399,23 +1407,23 @@
         desc:"가장 인기 있는 슬림형. 포켓/집게/덮개 타입 선택 가능"
       },
       "슬림디자인": {
-        sizes: {"1구":{price:49000,ship:10000},"2구":{price:59000,ship:10000},"3구":{price:68000,ship:13500},"4구":{price:83000,ship:14500},"6구":{price:101100,ship:18000},"8구":{price:128300,ship:19000},"10구":{price:146400,ship:28000}},
+        sizes: {"1구":{price:49000,ship:10000,islandShip:6000},"2구":{price:59000,ship:10000,islandShip:6000},"3구":{price:68000,ship:13500,islandShip:6000},"4구":{price:83000,ship:14500,islandShip:6000},"6구":{price:101100,ship:18000,islandShip:6000},"8구":{price:128300,ship:19000,islandShip:6000},"10구":{price:146400,ship:28000,islandShip:6000}},
         hasType:true, hasAdPanel:true, hasDesign:true, designCats:"extended",
         adPanelSet:"standard",
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0},{name:"덮개형",delta:0}],
-        addons:[{name:"메탈스카시",price:20000},{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],
+        addons:[{name:"메탈스카시",price:20000},{name:"고리추가 2개",price:2000}],
         requireNote:true,
         desc:"디자인 시트지 마감으로 고급스러운 외관"
       },
       "안전강화유리": {
-        sizes: {"1구":{price:33000,ship:9000},"2구":{price:55000,ship:9000},"3구":{price:75000,ship:10000},"4구":{price:82000,ship:10000},"6구":{price:110000,ship:11000},"8구":{price:148000,ship:12000},"10구":{price:180000,ship:18000}},
+        sizes: {"1구":{price:33000,ship:9000,islandShip:6000},"2구":{price:55000,ship:9000,islandShip:6000},"3구":{price:75000,ship:10000,islandShip:6000},"4구":{price:82000,ship:10000,islandShip:6000},"6구":{price:110000,ship:11000,islandShip:6000},"8구":{price:148000,ship:12000,islandShip:6000},"10구":{price:180000,ship:18000,islandShip:6000}},
         hasType:false, hasAdPanel:true, hasDesign:true, designType:"acrylglass",
         adPanelSet:"free",
         addons:[],requireNote:false,
         desc:"강화유리 포켓으로 내구성 최상"
       },
       "디자인": {
-        sizes: {"1구":{price:22000,ship:9000},"2구":{price:38000,ship:9000},"3구":{price:50000,ship:10000},"4구":{price:65000,ship:10000},"6구":{price:79000,ship:11000},"8구":{price:108000,ship:12000},"10구":{price:136000,ship:18000}},
+        sizes: {"1구":{price:22000,ship:9000,islandShip:6000},"2구":{price:38000,ship:9000,islandShip:6000},"3구":{price:50000,ship:10000,islandShip:6000},"4구":{price:65000,ship:10000,islandShip:6000},"6구":{price:79000,ship:11000,islandShip:6000},"8구":{price:108000,ship:12000,islandShip:6000},"10구":{price:136000,ship:18000,islandShip:6000}},
         hasType:true, hasAdPanel:true, hasDesign:false,
         adPanelSet:"free",
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0},{name:"덮개형",delta:0}],
@@ -1423,26 +1431,26 @@
         desc:"합리적 가격의 디자인 게시판"
       },
       "크리스탈": {
-        sizes: {"1구":{price:35000,ship:8000},"2구":{price:66000,ship:8000},"3구":{price:90000,ship:12000},"4구":{price:110000,ship:12000},"6구":{price:138000,ship:15000},"8구":{price:190000,ship:-1},"10구":{price:240000,ship:-1}},
+        sizes: {"1구":{price:35000,ship:8000,islandShip:6000},"2구":{price:66000,ship:8000,islandShip:6000},"3구":{price:90000,ship:12000,islandShip:6000},"4구":{price:110000,ship:12000,islandShip:6000},"6구":{price:138000,ship:15000,islandShip:6000},"8구":{price:190000,ship:-1,islandShip:6000},"10구":{price:240000,ship:-1,islandShip:6000}},
         hasType:false, hasAdPanel:true, hasDesign:true, designType:"crystal",
         adPanelSet:"free",
         addons:[{name:"고리추가 2개",price:2000}],requireNote:false,
         desc:"투명 아크릴 프레임의 세련된 디자인"
       },
       "아크릴": {
-        sizes: {"1구":{price:48000,ship:7000},"2구":{price:85000,ship:7000},"3구":{price:123000,ship:7000},"4구":{price:160000,ship:7000},"6구":{price:205000,ship:7000},"8구":{price:309000,ship:-1},"10구":{price:371000,ship:-1}},
+        sizes: {"1구":{price:48000,ship:7000,islandShip:6000},"2구":{price:85000,ship:7000,islandShip:6000},"3구":{price:123000,ship:7000,islandShip:6000},"4구":{price:160000,ship:7000,islandShip:6000},"6구":{price:205000,ship:7000,islandShip:6000},"8구":{price:309000,ship:-1,islandShip:6000},"10구":{price:371000,ship:-1,islandShip:6000}},
         hasType:false, hasAdPanel:false, hasDesign:true, designType:"acryl",
         addons:[],requireNote:false,
         desc:"A4/A3 다양한 규격. 투명 아크릴 소재"
       },
       "슬림자석": {
-        sizes: {"1구":{price:55600,ship:0},"2구":{price:92800,ship:0},"3구":{price:128800,ship:0},"4구":{price:166000,ship:0},"6구":{price:207000,ship:-1},"8구":{price:306000,ship:-1},"10구":{price:365000,ship:-1}},
+        sizes: {"1구":{price:55600,ship:0,islandShip:6000},"2구":{price:92800,ship:0,islandShip:6000},"3구":{price:128800,ship:0,islandShip:6000},"4구":{price:166000,ship:0,islandShip:6000},"6구":{price:207000,ship:-1,islandShip:6000},"8구":{price:306000,ship:-1,islandShip:6000},"10구":{price:365000,ship:-1,islandShip:6000}},
         hasType:false, hasAdPanel:false, hasDesign:true, designType:"slimmag",
         addons:[{name:"아크릴포켓 추가",price:10000},{name:"자석추가 2개",price:3000}],requireNote:false,
         desc:"자석 탈부착 방식으로 용지 교체 간편"
       },
       "우드": {
-        sizes: {"1구":{price:32000,ship:5000},"2구":{price:39900,ship:5000},"3구":{price:46000,ship:6000},"4구":{price:57000,ship:6000},"6구":{price:71000,ship:7000},"8구":{price:84500,ship:10000},"10구":{price:115000,ship:12000}},
+        sizes: {"1구":{price:32000,ship:5000,islandShip:6000},"2구":{price:39900,ship:5000,islandShip:6000},"3구":{price:46000,ship:6000,islandShip:6000},"4구":{price:57000,ship:6000,islandShip:6000},"6구":{price:71000,ship:7000,islandShip:6000},"8구":{price:84500,ship:10000,islandShip:6000},"10구":{price:115000,ship:12000,islandShip:6000}},
         hasType:true, hasAdPanel:true, hasDesign:true, hasColor:true, designType:"wood",
         adPanelSet:"standard",
         typeOptions:[{name:"포켓형",delta:24000},{name:"집게형",delta:0},{name:"덮개형",delta:24000}],
@@ -1451,7 +1459,7 @@
         desc:"원목 느낌의 따뜻한 분위기"
       },
       "알루미늄": {
-        sizes: {"1구":{price:37000,ship:5000},"2구":{price:44900,ship:5000},"3구":{price:52000,ship:6000},"4구":{price:63000,ship:6000},"6구":{price:78000,ship:7000},"8구":{price:94500,ship:10000},"10구":{price:127000,ship:12000}},
+        sizes: {"1구":{price:37000,ship:5000,islandShip:6000},"2구":{price:44900,ship:5000,islandShip:6000},"3구":{price:52000,ship:6000,islandShip:6000},"4구":{price:63000,ship:6000,islandShip:6000},"6구":{price:78000,ship:7000,islandShip:6000},"8구":{price:94500,ship:10000,islandShip:6000},"10구":{price:127000,ship:12000,islandShip:6000}},
         hasType:true, hasAdPanel:true, hasDesign:true, designType:"alum",
         adPanelSet:"standard",
         typeOptions:[{name:"포켓형",delta:7900},{name:"집게형",delta:0},{name:"덮개형",delta:7900}],
@@ -1459,7 +1467,7 @@
         desc:"가벼운 알루미늄 프레임. 심플한 디자인"
       },
       "슬림안전보건": {
-        sizes: {"8구":{price:141300,ship:28000},"10구":{price:159400,ship:28000}},
+        sizes: {"8구":{price:141300,ship:28000,islandShip:6000},"10구":{price:159400,ship:28000,islandShip:6000}},
         hasType:true, hasAdPanel:false, hasDesign:true, hasColor:true,
         typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0}],
         colorOptions:["골드","실버","블랙"],
@@ -1473,17 +1481,17 @@
             "집게형":{"골드":IMG_BASE+"/2025/01/14/83e0f105326252928bc544f9dc98483c95f28f01.png","실버":IMG_BASE+"/2025/01/14/e261c8b84da094f1065d35f4b97cada84cc4ae27.png","블랙":IMG_BASE+"/2025/01/14/b55cace7b706de97d043423ecb6c8c46947f5eea.png"}
           }
         },
-        addons:[{name:"강화유리 포켓 추가",price:15000},{name:"고리추가 2개",price:2000}],requireNote:false,
+        addons:[{name:"고리추가 2개",price:2000}],requireNote:false,
         desc:"안전보건 법령 게시용 슬림디자인 게시판"
       },
       "산업안전보건": {
-        sizes: {"1구":{price:72000,ship:0},"2구":{price:82000,ship:0},"3구":{price:94500,ship:0},"4구(가로)":{price:110500,ship:0},"4구(세로)":{price:131500,ship:0},"6구":{price:132100,ship:0}},
+        sizes: {"1구":{price:72000,ship:0,islandShip:6000},"2구":{price:82000,ship:0,islandShip:6000},"3구":{price:94500,ship:0,islandShip:6000},"4구(가로)":{price:110500,ship:0,islandShip:6000},"4구(세로)":{price:131500,ship:0,islandShip:6000},"6구":{price:132100,ship:0,islandShip:6000}},
         hasType:false, hasAdPanel:false, hasDesign:false,
         addons:[],requireNote:true,
         desc:"산업안전보건법 의무 게시 전용"
       },
       "갈바": {
-        sizes: {"갈바게시판":{price:528000,ship:40000},"갈바프레임 게시판":{price:600000,ship:40000},"갈바프레임 주문제작":{price:935000,ship:50000}},
+        sizes: {"갈바게시판":{price:528000,ship:40000,islandShip:6000},"갈바프레임 게시판":{price:600000,ship:40000,islandShip:6000},"갈바프레임 주문제작":{price:935000,ship:50000,islandShip:6000}},
         hasType:false, hasAdPanel:false, hasDesign:false,
         addons:[],requireNote:false,
         desc:"야외용 갈바 소재. 대형 게시판"
@@ -1702,7 +1710,8 @@
       customerName: '',
       customerPhone: '',
       zoomCurrentDesign: 0,
-      zoomDesigns: []
+      zoomDesigns: [],
+      isIsland: false
     };
 
     function qb_formatPrice(num) {
@@ -1725,6 +1734,20 @@
       return steps;
     }
 
+    function qb_goToStep(targetStep) {
+      const activeSteps = qb_getActiveSteps();
+      const currentIdx = activeSteps.indexOf(qb_state.currentStep);
+      const targetIdx = activeSteps.indexOf(targetStep);
+      // 이전 스텝(done)으로만 이동 가능, 미래 스텝은 불가
+      if (targetIdx < 0 || targetIdx >= currentIdx) return;
+      document.getElementById('qb-step-' + qb_state.currentStep).classList.remove('active');
+      qb_state.currentStep = targetStep;
+      document.getElementById('qb-step-' + targetStep).classList.add('active');
+      qb_updateStepIndicator();
+      qb_updatePriceBar();
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
     function qb_updateStepIndicator() {
       const activeSteps = qb_getActiveSteps();
       const current = qb_state.currentStep;
@@ -1739,7 +1762,7 @@
         const pos = idx + 1; // 표시 순번 (1부터)
         let cls = absStep < current ? 'done' : absStep === current ? 'current' : 'upcoming';
         let label = labels[pos] || '';
-        html += '<div class="qb-progress-item">';
+        html += '<div class="qb-progress-item" style="cursor:pointer" onclick="qb_goToStep(' + absStep + ')">';
         html += '<div class="qb-progress-step ' + cls + '">' + pos + '</div>';
         html += '<div class="qb-progress-label ' + cls + '">' + label + '</div>';
         html += '</div>';
@@ -1892,6 +1915,23 @@
       qb_state.selectedAdPanel = null;
       qb_state.selectedDesign = null;
       qb_renderSizeSelection();
+      // 도서산간 컨테이너 표시
+      const prod = PRODUCTS[qb_state.selectedSeries];
+      const islandData = prod.sizes[size].islandShip;
+      const container = document.getElementById('qb-island-ship-container');
+      if (islandData && islandData > 0) {
+        container.style.display = 'block';
+        document.getElementById('qb-island-price').textContent = '+' + qb_formatPrice(islandData);
+      } else {
+        container.style.display = 'none';
+        qb_state.isIsland = false;
+        document.getElementById('qb-island-check').checked = false;
+      }
+      qb_updatePriceBar();
+    }
+
+    function qb_toggleIslandShip() {
+      qb_state.isIsland = document.getElementById('qb-island-check').checked;
       qb_updatePriceBar();
     }
 
@@ -1935,14 +1975,18 @@
       let html = '';
 
       qb_getAdPanels().forEach((panel, idx) => {
+        const hasImg = AD_PANEL_IMAGES[panel.value];
         html += `
-          <div class="qb-card ${qb_state.selectedAdPanel === idx ? 'selected' : ''}" onclick="qb_selectAdPanel(${idx})">
-            <div class="qb-card-radio">
-              <div class="qb-radio"></div>
-              <div class="qb-card-label">
-                <div class="qb-card-title">${AD_PANEL_IMAGES[panel.value] ? '<img src="' + AD_PANEL_IMAGES[panel.value] + '" style="width:60px;height:72px;object-fit:cover;border-radius:6px;margin-right:10px;vertical-align:middle;border:1px solid #353560;">' : panel.icon + ' '}${panel.value}</div>
-                <div class="qb-card-desc">${panel.desc}</div>
-                <div style="font-size: 12px; color: #9ca3af; margin-top: 6px;">규격: ${panel.size} / 가격: ${qb_formatPrice(panel.price)}</div>
+          <div class="qb-card ${qb_state.selectedAdPanel === idx ? 'selected' : ''}" onclick="qb_selectAdPanel(${idx})" style="${hasImg ? 'display:flex;align-items:stretch;padding:0;overflow:hidden;' : ''}">
+            ${hasImg ? '<img src="' + AD_PANEL_IMAGES[panel.value] + '" style="width:200px;min-height:200px;object-fit:cover;flex-shrink:0;border-right:1px solid #353560;">' : ''}
+            <div style="${hasImg ? 'display:flex;flex-direction:column;justify-content:center;padding:16px;flex:1;' : ''}">
+              <div class="qb-card-radio" style="${hasImg ? 'margin-bottom:8px;' : ''}">
+                <div class="qb-radio"></div>
+                <div class="qb-card-label">
+                  <div class="qb-card-title">${hasImg ? '' : panel.icon + ' '}${panel.value}</div>
+                  <div class="qb-card-desc">${panel.desc}</div>
+                  <div style="font-size: 12px; color: #9ca3af; margin-top: 6px;">규격: ${panel.size} / 가격: ${qb_formatPrice(panel.price)}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -2362,6 +2406,17 @@
         </div>
       `;
 
+      // 도서산간
+      const sizeData = prod.sizes[qb_state.selectedSize];
+      html += `
+        <div class="qb-confirmation-row">
+          <div class="qb-confirmation-label">도서산간</div>
+          <div class="qb-confirmation-value">
+            <div class="qb-confirmation-text">${qb_state.isIsland ? '해당 (+' + qb_formatPrice(sizeData.islandShip || 0) + ')' : '해당없음'}</div>
+          </div>
+        </div>
+      `;
+
       // Type (with thumbnail)
       if (prod.hasType) {
         const typeImgUrl = TYPE_IMAGES[qb_state.selectedType] || '';
@@ -2501,9 +2556,11 @@
       });
 
       const isCOD = shippingPrice === -1;
+      const islandExtra = (qb_state.isIsland && sizeData.islandShip) ? sizeData.islandShip : 0;
       const displayShipping = isCOD ? 0 : shippingPrice;
-      const total = productPrice + displayShipping;
-      const shippingText = isCOD ? '착불(화물배송)' : qb_formatPrice(shippingPrice);
+      const total = productPrice + displayShipping + islandExtra;
+      let shippingText = isCOD ? '착불(화물배송)' : qb_formatPrice(shippingPrice);
+      if (islandExtra > 0) shippingText += ' + 도서산간 ' + qb_formatPrice(islandExtra);
       const totalText = isCOD ? qb_formatPrice(productPrice) + ' + 착불' : qb_formatPrice(total);
 
       document.getElementById('qb-price-product').textContent = qb_formatPrice(productPrice);
