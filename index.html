@@ -1194,8 +1194,8 @@
 
       <div id="qb-notes-container">
         <div class="qb-input-group">
-          <label class="qb-label">특별 요청사항 <span style="color:#6a6a88;font-size:11px;">(선택사항)</span></label>
-          <textarea id="qb-notes" placeholder="예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등..."></textarea>
+          <label class="qb-label" id="qb-notes-label">특별 요청사항 <span style="color:#6a6a88;font-size:11px;">(선택사항)</span></label>
+          <textarea id="qb-notes" placeholder="예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등..." oninput="this.style.border=''"></textarea>
         </div>
       </div>
 
@@ -2630,13 +2630,16 @@
         const titleEl = document.querySelector('#qb-step-7 .qb-step-title');
         const subtitleEl = document.querySelector('#qb-step-7 .qb-step-subtitle');
         const notesEl = document.getElementById('qb-notes');
+        const labelEl = document.getElementById('qb-notes-label');
         if (prod && prod.requireNote) {
           if (titleEl) titleEl.textContent = '요청사항을 입력해주세요';
           if (subtitleEl) subtitleEl.innerHTML = '이 제품은 요청사항 입력이 <span style="color:#ff6b6b;font-weight:700;">필수</span>입니다 (예: 게시 내용, 디자인 요청 등)';
+          if (labelEl) labelEl.innerHTML = '특별 요청사항 <span style="color:#ff6b6b;font-size:11px;">(필수)</span>';
           if (notesEl) notesEl.placeholder = '필수 입력: 게시 내용, 디자인 요청, 규격 변경 등을 입력해주세요';
         } else {
           if (titleEl) titleEl.textContent = '요청사항이 있으신가요?';
           if (subtitleEl) subtitleEl.innerHTML = '배송 및 제작 시 특별한 요청사항이 있으면 입력하세요 <span style="color:#6a6a88;font-size:12px;">(선택)</span>';
+          if (labelEl) labelEl.innerHTML = '특별 요청사항 <span style="color:#6a6a88;font-size:11px;">(선택사항)</span>';
           if (notesEl) notesEl.placeholder = '예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등...';
         }
       }
@@ -2766,7 +2769,10 @@ function qb_checkCustomerForm() {
       const notes = document.getElementById('qb-notes').value.trim();
       const prod = PRODUCTS[qb_state.selectedSeries];
       if (prod && prod.requireNote && !notes) {
-        alert('이 제품은 요청사항 입력이 필수입니다.\n예: 게시 내용, 디자인 요청, 규격 변경 등');
+        const ta = document.getElementById('qb-notes');
+        ta.style.border = '2px solid #ff6b6b';
+        ta.focus();
+        ta.setAttribute('placeholder','필수 입력: 게시 내용, 디자인 요청, 규격 변경 등을 입력해주세요');
         return;
       }
       qb_state.notes = notes;
