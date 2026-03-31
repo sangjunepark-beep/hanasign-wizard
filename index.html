@@ -1118,15 +1118,15 @@
       <h1 class="qb-step-title">구수를 선택해주세요</h1>
       <p class="qb-step-subtitle">게시판의 크기를 선택하면 가격이 표시됩니다</p>
 
-      <div id="qb-sizes-container"></div>
-
-      <div id="qb-island-ship-container" style="display:none;margin-top:16px;padding:14px 16px;background:#1e1e38;border:1px solid #353560;border-radius:10px;">
+      <div id="qb-island-ship-container" style="display:none;margin-bottom:16px;padding:14px 16px;background:#1e1e38;border:1px solid #353560;border-radius:10px;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="qb-island-check" onchange="qb_toggleIslandShip()" style="width:18px;height:18px;accent-color:#4A7BF7;">
           <span style="color:#e8e8ec;font-size:14px;font-weight:600;">제주/도서산간 지역입니다</span>
           <span id="qb-island-price" style="color:#ff6b6b;font-size:13px;margin-left:auto;"></span>
         </label>
       </div>
+
+      <div id="qb-sizes-container"></div>
 
       <div class="qb-button-group">
         <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
@@ -1189,7 +1189,7 @@
 
     <!-- STEP 7: Request Notes -->
     <div id="qb-step-7" class="qb-step-content">
-      <h1 class="qb-step-title">요청사항을 입력해주세요</h1>
+      <h1 class="qb-step-title">요청사항이 있으신가요?</h1>
       <p class="qb-step-subtitle">배송 및 제작 시 특별한 요청사항이 있으면 입력하세요 <span style="color:#6a6a88;font-size:12px;">(선택)</span></p>
 
       <div id="qb-notes-container">
@@ -1905,6 +1905,15 @@
       });
 
       document.getElementById('qb-sizes-container').innerHTML = html;
+      const firstSize = sizes[0];
+      const islandVal = prod.sizes[firstSize].islandShip;
+      const islandContainer = document.getElementById('qb-island-ship-container');
+      if (islandVal && islandVal > 0) {
+        islandContainer.style.display = 'block';
+        document.getElementById('qb-island-price').textContent = '+' + qb_formatPrice(islandVal);
+      } else {
+        islandContainer.style.display = 'none';
+      }
       const btn = document.getElementById('qb-step2-next');
       btn.disabled = !qb_state.selectedSize;
     }
@@ -1915,18 +1924,6 @@
       qb_state.selectedAdPanel = null;
       qb_state.selectedDesign = null;
       qb_renderSizeSelection();
-      // 도서산간 컨테이너 표시
-      const prod = PRODUCTS[qb_state.selectedSeries];
-      const islandData = prod.sizes[size].islandShip;
-      const container = document.getElementById('qb-island-ship-container');
-      if (islandData && islandData > 0) {
-        container.style.display = 'block';
-        document.getElementById('qb-island-price').textContent = '+' + qb_formatPrice(islandData);
-      } else {
-        container.style.display = 'none';
-        qb_state.isIsland = false;
-        document.getElementById('qb-island-check').checked = false;
-      }
       qb_updatePriceBar();
     }
 
@@ -2627,16 +2624,19 @@
         el.classList.remove('active');
       });
 
-      // Step 7: requireNote에 따라 부제목/필수 표시 동적 변경
+      // Step 7: requireNote에 따라 타이틀/부제목/필수 표시 동적 변경
       if (qb_state.currentStep === 7 && qb_state.selectedSeries) {
         const prod = PRODUCTS[qb_state.selectedSeries];
+        const titleEl = document.querySelector('#qb-step-7 .qb-step-title');
         const subtitleEl = document.querySelector('#qb-step-7 .qb-step-subtitle');
         const notesEl = document.getElementById('qb-notes');
         if (prod && prod.requireNote) {
-          if (subtitleEl) subtitleEl.textContent = '이 제품은 요청사항 입력이 필수입니다 (예: 게시 내용, 디자인 요청 등)';
+          if (titleEl) titleEl.textContent = '요청사항을 입력해주세요';
+          if (subtitleEl) subtitleEl.innerHTML = '이 제품은 요청사항 입력이 <span style="color:#ff6b6b;font-weight:700;">필수</span>입니다 (예: 게시 내용, 디자인 요청 등)';
           if (notesEl) notesEl.placeholder = '필수 입력: 게시 내용, 디자인 요청, 규격 변경 등을 입력해주세요';
         } else {
-          if (subtitleEl) subtitleEl.textContent = '배송 및 제작 시 특별한 요청사항이 있으면 입력하세요';
+          if (titleEl) titleEl.textContent = '요청사항이 있으신가요?';
+          if (subtitleEl) subtitleEl.innerHTML = '배송 및 제작 시 특별한 요청사항이 있으면 입력하세요 <span style="color:#6a6a88;font-size:12px;">(선택)</span>';
           if (notesEl) notesEl.placeholder = '예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등...';
         }
       }
