@@ -1449,7 +1449,7 @@
       "슬림자석": {
         sizes: {"1구":{price:55600,ship:0,islandShip:6000},"2구":{price:92800,ship:0,islandShip:6000},"3구":{price:128800,ship:0,islandShip:6000},"4구":{price:166000,ship:0,islandShip:6000},"6구":{price:207000,ship:-1,islandShip:6000},"8구":{price:306000,ship:-1,islandShip:6000},"10구":{price:365000,ship:-1,islandShip:6000}},
         hasType:false, hasAdPanel:false, hasDesign:true, designType:"slimmag",
-        addons:[{name:"아크릴포켓 추가",price:10000},{name:"자석추가 2개",price:3000}],requireNote:false,
+        addons:[{name:"아크릴포켓 추가 (1개당)",price:10000,qty:true},{name:"자석추가 2개",price:3000}],requireNote:false,
         desc:"자석 탈부착 방식으로 용지 교체 간편"
       },
       "우드": {
@@ -1744,6 +1744,7 @@
       selectedAdPanel: null,
       selectedDesign: null,
       selectedAddons: [],
+      addonQtys: {},
       notes: '',
       customerName: '',
       customerPhone: '',
@@ -1910,6 +1911,7 @@
       qb_state.selectedAdPanel = null;
       qb_state.selectedDesign = null;
       qb_state.selectedAddons = [];
+      qb_state.addonQtys = {};
       qb_state.totalSteps = qb_calculateTotalSteps();
       qb_renderSeriesSelection();
     }
@@ -2009,6 +2011,7 @@
       qb_state.selectedAdPanel = null;
       qb_state.selectedDesign = null;
       qb_state.selectedAddons = [];
+      qb_state.addonQtys = {};
       qb_renderTypeSelection();
       qb_updatePriceBar();
     }
@@ -2413,15 +2416,39 @@
         const disabled = isTypeRestricted;
         const disabledStyle = disabled ? 'opacity:0.4;pointer-events:none;' : '';
         const disabledNote = disabled ? ' <span style="color:#6a6a88;font-size:11px;">(포켓형만 선택 가능)</span>' : '';
-        html += `
-          <label class="qb-checkbox" style="${disabledStyle}">
-            <input type="checkbox" value="${idx}" onchange="qb_toggleAddon(${idx})" ${disabled ? 'disabled' : ''}>
-            <span class="qb-checkbox-label">${addon.name} (+${qb_formatPrice(addonPrice)})${disabledNote}</span>
-          </label>
-        `;
+
+        if (addon.qty) {
+          const qty = qb_state.addonQtys[idx] || 0;
+          html += `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #2e2e50;${disabledStyle}">
+              <span style="font-size:15px;color:#e2e8f0;">${addon.name} <span style="color:#4A7BF7;font-weight:600;">+${qb_formatPrice(addonPrice)}</span>${disabledNote}</span>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <button onclick="qb_changeAddonQty(${idx},-1)" style="width:36px;height:36px;border-radius:8px;border:1px solid #4A7BF7;background:transparent;color:#4A7BF7;font-size:20px;cursor:pointer;line-height:1;">−</button>
+                <span id="qb-addon-qty-${idx}" style="font-size:18px;font-weight:700;color:#fff;min-width:24px;text-align:center;">${qty}</span>
+                <button onclick="qb_changeAddonQty(${idx},1)" style="width:36px;height:36px;border-radius:8px;border:none;background:#4A7BF7;color:#fff;font-size:20px;cursor:pointer;line-height:1;">+</button>
+              </div>
+            </div>
+          `;
+        } else {
+          html += `
+            <label class="qb-checkbox" style="${disabledStyle}">
+              <input type="checkbox" value="${idx}" onchange="qb_toggleAddon(${idx})" ${disabled ? 'disabled' : ''} ${qb_state.selectedAddons.includes(idx) ? 'checked' : ''}>
+              <span class="qb-checkbox-label">${addon.name} (+${qb_formatPrice(addonPrice)})${disabledNote}</span>
+            </label>
+          `;
+        }
       });
 
       document.getElementById('qb-addons-container').innerHTML = html;
+    }
+
+    function qb_changeAddonQty(idx, delta) {
+      const current = qb_state.addonQtys[idx] || 0;
+      const next = Math.max(0, current + delta);
+      qb_state.addonQtys[idx] = next;
+      const el = document.getElementById('qb-addon-qty-' + idx);
+      if (el) el.textContent = next;
+      qb_updatePriceBar();
     }
 
     function qb_toggleAddon(idx) {
@@ -2552,13 +2579,17 @@
       }
 
       // Addons
-      if (qb_state.selectedAddons.length > 0) {
-        let addonText = qb_state.selectedAddons.map(idx => prod.addons[idx].name + ' (+' + qb_formatPrice(qb_getAddonPrice(prod.addons[idx])) + ')').join(', ');
+      const qtyAddonLines = Object.entries(qb_state.addonQtys)
+        .filter(([idx, qty]) => qty > 0 && prod.addons[idx] && prod.addons[idx].qty)
+        .map(([idx, qty]) => prod.addons[idx].name + ' × ' + qty + '개 (+' + qb_formatPrice(prod.addons[idx].price * qty) + ')');
+      const checkAddonLines = qb_state.selectedAddons.map(idx => prod.addons[idx].name + ' (+' + qb_formatPrice(qb_getAddonPrice(prod.addons[idx])) + ')');
+      const allAddonLines = [...checkAddonLines, ...qtyAddonLines];
+      if (allAddonLines.length > 0) {
         html += `
           <div class="qb-confirmation-row">
             <div class="qb-confirmation-label">추가옵션</div>
             <div class="qb-confirmation-value">
-              <div class="qb-confirmation-text">${addonText}</div>
+              <div class="qb-confirmation-text">${allAddonLines.join(', ')}</div>
               <button class="qb-confirmation-edit" onclick="qb_jumpToStep(6)">수정</button>
             </div>
           </div>
@@ -2619,6 +2650,11 @@
 
       qb_state.selectedAddons.forEach(idx => {
         productPrice += qb_getAddonPrice(prod.addons[idx]);
+      });
+      Object.entries(qb_state.addonQtys).forEach(([idx, qty]) => {
+        if (qty > 0 && prod.addons[idx] && prod.addons[idx].qty) {
+          productPrice += prod.addons[idx].price * qty;
+        }
       });
 
       const isCOD = shippingPrice === -1;
@@ -2747,6 +2783,11 @@ function qb_checkCustomerForm() {
 
       qb_state.selectedAddons.forEach(idx => {
         productPrice += qb_getAddonPrice(prod.addons[idx]);
+      });
+      Object.entries(qb_state.addonQtys).forEach(([idx, qty]) => {
+        if (qty > 0 && prod.addons[idx] && prod.addons[idx].qty) {
+          productPrice += prod.addons[idx].price * qty;
+        }
       });
 
       const total = (shippingPrice < 0) ? productPrice : productPrice + shippingPrice;
