@@ -2070,7 +2070,7 @@
     function qb_selectType(type) {
       qb_state.selectedType = type;
       qb_state.selectedMolding = null;
-      qb_state.selectedAdPanel = null;
+      // selectedAdPanel은 리셋하지 않음 (광고면→타입 순서이므로 이미 선택된 상태 유지)
       qb_state.selectedDesign = null;
       qb_state.selectedAddons = [];
       qb_state.addonQtys = {};
