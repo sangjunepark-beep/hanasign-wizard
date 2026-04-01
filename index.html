@@ -1001,8 +1001,8 @@
 
       .qb-card { flex-direction: row !important; }
       .qb-card img:not(.qb-adpanel-img) { width: 70px !important; height: 70px !important; flex-shrink: 0; }
-      .qb-card:has(.qb-adpanel-img) { flex-direction: column !important; }
-      .qb-adpanel-img { width: 100% !important; min-height: auto !important; max-height: 180px; object-fit: contain !important; background: #1e1e3a; border-right: none !important; border-bottom: 1px solid #353560; }
+      .qb-card:has(.qb-adpanel-img) { flex-direction: row !important; align-items: stretch !important; padding: 0 !important; overflow: hidden !important; }
+      .qb-adpanel-img { width: 120px !important; min-width: 120px !important; min-height: 120px !important; max-height: none !important; object-fit: cover !important; background: #1e1e3a; border-right: 1px solid #353560 !important; border-bottom: none !important; flex-shrink: 0 !important; }
       .qb-card-title { font-size: 17px; }
       .qb-card-desc { font-size: 14px; }
 
