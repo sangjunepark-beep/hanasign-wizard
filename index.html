@@ -1426,7 +1426,7 @@
         sizes: {"1구":{price:22000,ship:9000,islandShip:6000},"2구":{price:38000,ship:9000,islandShip:6000},"3구":{price:50000,ship:10000,islandShip:6000},"4구":{price:65000,ship:10000,islandShip:6000},"6구":{price:79000,ship:11000,islandShip:6000},"8구":{price:108000,ship:12000,islandShip:6000},"10구":{price:136000,ship:18000,islandShip:6000}},
         hasType:true, hasAdPanel:true, hasDesign:false,
         adPanelSet:"디자인",
-        typeOptions:[{name:"포켓형",delta:0},{name:"집게형",delta:0},{name:"덮개형",delta:0}],
+        typeOptions:[{name:"포켓형",delta:{"1구":8000,"2구":11000,"3구":16000,"4구":19000,"6구":34000,"8구":20000,"10구":32000}},{name:"집게형",delta:0},{name:"덮개형",delta:{"1구":8000,"2구":11000,"3구":16000,"4구":19000,"6구":34000,"8구":20000,"10구":32000}}],
         addons:[],requireNote:false,
         desc:"합리적 가격의 디자인 게시판"
       },
@@ -2593,7 +2593,7 @@
 
       if (qb_state.selectedType !== null && prod.typeOptions) {
         const _typeOpt = prod.typeOptions.find(t => t.name === qb_state.selectedType);
-        if (_typeOpt) productPrice += _typeOpt.delta;
+        if (_typeOpt) { const _d = _typeOpt.delta; productPrice += (typeof _d === 'object') ? (_d[qb_state.selectedSize] || 0) : _d; }
       }
 
       if (qb_state.selectedAdPanel !== null) {
@@ -2720,7 +2720,7 @@ function qb_checkCustomerForm() {
 
       if (qb_state.selectedType !== null && prod.typeOptions) {
         const _tOpt = prod.typeOptions.find(t => t.name === qb_state.selectedType);
-        if (_tOpt) productPrice += _tOpt.delta;
+        if (_tOpt) { const _d = _tOpt.delta; productPrice += (typeof _d === 'object') ? (_d[qb_state.selectedSize] || 0) : _d; }
       }
 
       if (qb_state.selectedAdPanel !== null) {
