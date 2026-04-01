@@ -2125,16 +2125,19 @@
           const imgPath = WOOD_COLOR_IMAGES[color] || '';
           const imgUrl = imgPath ? SEQ_DESIGN_BASE + imgPath : '';
           const numLabel = String(i + 1).padStart(2, '0');
-          const isSelected = qb_state.selectedDesign === ('wood_' + numLabel);
-          html += `<div class="qb-design-thumb ${isSelected ? 'selected' : ''}" onclick="qb_selectSeqDesign('wood_${numLabel}', this)">`;
-          if (imgUrl) {
-            html += `<div style="position:relative">`;
-            html += `<img src="${imgUrl}" alt="${color}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px 4px 0 0">`;
-            html += `<div class="qb-design-zoom-icon" onclick="qb_openZoom('wood_${numLabel}', event)">🔍</div>`;
-            html += `</div>`;
-          }
-          html += `<div style="text-align:center;padding:4px 2px;font-size:11px;line-height:1.3">${color}</div>`;
-          html += '</div>';
+          const key = 'wood_' + numLabel;
+          html += `
+            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}" onclick="qb_selectDesign('${key}', event)">
+              <div style="position:relative;">
+                <img src="${imgUrl}" alt="${color}" class="qb-design-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
+                <div class="qb-design-zoom-icon" onclick="qb_openZoom('${key}', event)">🔍</div>
+              </div>
+              <div class="qb-design-info">
+                <div class="qb-design-code">${color}</div>
+                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">선택</button>
+              </div>
+            </div>
+          `;
         });
         document.getElementById('qb-design-grid').innerHTML = html;
         document.getElementById('qb-step5-next').disabled = !qb_state.selectedDesign;
