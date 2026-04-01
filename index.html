@@ -1934,7 +1934,7 @@
                 <div class="qb-radio"></div>
                 <div class="qb-card-label">
                   <div class="qb-card-title">${size}</div>
-                  <div class="qb-card-desc">${qb_formatPrice(price)} (배송비: ${qb_formatPrice(ship)})</div>
+                  <div class="qb-card-desc">${qb_formatPrice(price)} (배송비: ${ship === -1 ? '착불(화물배송)' : ship === -2 ? '착불(퀵배송)' : ship === 0 ? '무료' : qb_formatPrice(ship)})</div>
                 </div>
               </div>
             </div>
