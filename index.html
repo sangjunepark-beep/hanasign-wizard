@@ -1977,17 +1977,22 @@
       types.forEach(type => {
         const img = TYPE_IMAGES[type] || '';
         const desc = TYPE_DESC[type] || '';
+        const typeOpt = prod && prod.typeOptions ? prod.typeOptions.find(t => t.name === type) : null;
+        const rawDelta = typeOpt ? typeOpt.delta : 0;
+        const delta = (typeof rawDelta === 'object') ? (rawDelta[qb_state.selectedSize] || 0) : (rawDelta || 0);
+        const priceLabel = delta > 0 ? `<span style="color:#4A7BF7;font-weight:700;font-size:14px;">+${qb_formatPrice(delta)}</span>` : `<span style="color:#9ca3af;font-size:13px;">추가금 없음</span>`;
         html += `
           <div class="qb-card ${qb_state.selectedType === type ? 'selected' : ''}" onclick="qb_selectType('${type}')" style="display:flex;gap:16px;align-items:center;padding:12px">
             <img src="${img}" alt="${type}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;cursor:zoom-in;background:#1e1e38;border:1px solid #353560" onerror="this.onerror=null;this.alt='${type}'" onclick="event.stopPropagation();qb_showImageZoom('${img}','${type}')">
             <div style="flex:1">
-              <div class="qb-card-radio" style="margin-bottom:0">
+              <div class="qb-card-radio" style="margin-bottom:4px">
                 <div class="qb-radio"></div>
                 <div class="qb-card-label">
                   <div class="qb-card-title">${type}</div>
                   <div class="qb-card-desc">${desc}</div>
                 </div>
               </div>
+              <div style="margin-left:28px;margin-top:4px;">${priceLabel}</div>
             </div>
           </div>
         `;
