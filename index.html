@@ -2003,8 +2003,8 @@
       qb_getAdPanels().forEach((panel, idx) => {
         const hasImg = AD_PANEL_IMAGES[panel.value];
         html += `
-          <div class="qb-card ${qb_state.selectedAdPanel === idx ? 'selected' : ''}" onclick="qb_selectAdPanel(${idx})" style="${hasImg ? 'display:flex;align-items:stretch;padding:0;overflow:hidden;' : ''}">
-            ${hasImg ? '<img src="' + AD_PANEL_IMAGES[panel.value] + '" style="width:200px;min-height:200px;object-fit:cover;flex-shrink:0;border-right:1px solid #353560;">' : ''}
+          <div class="qb-card ${qb_state.selectedAdPanel === idx ? 'selected' : ''}" onclick="qb_selectAdPanel(${idx})" style="${hasImg ? 'display:flex;flex-direction:column;padding:0;overflow:hidden;' : ''}">
+            ${hasImg ? '<img src="' + AD_PANEL_IMAGES[panel.value] + '" style="width:100%;max-height:200px;object-fit:contain;background:#1e1e3a;flex-shrink:0;border-bottom:1px solid #353560;">' : ''}
             <div style="${hasImg ? 'display:flex;flex-direction:column;justify-content:center;padding:16px;flex:1;' : ''}">
               <div class="qb-card-radio" style="${hasImg ? 'margin-bottom:8px;' : ''}">
                 <div class="qb-radio"></div>
