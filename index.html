@@ -1137,13 +1137,12 @@
       </div>
     </div>
 
-    <!-- STEP 3: Type Selection (Conditional) -->
+    <!-- STEP 3: Ad Panel Selection (Conditional) -->
     <div id="qb-step-3" class="qb-step-content">
-      <h1 class="qb-step-title">타입을 선택해주세요</h1>
-      <p class="qb-step-subtitle">포켓형, 집게형, 덮개형 중 선택하세요</p>
+      <h1 class="qb-step-title">광고면 옵션을 선택해주세요</h1>
+      <p class="qb-step-subtitle">광고면 없음, 무지, 인쇄 중 선택하세요</p>
 
-      <div id="qb-types-container"></div>
-      <div id="qb-molding-container" style="display:none;"></div>
+      <div id="qb-ad-panels-container"></div>
 
       <div class="qb-button-group">
         <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
@@ -1151,12 +1150,13 @@
       </div>
     </div>
 
-    <!-- STEP 4: Ad Panel Selection (Conditional) -->
+    <!-- STEP 4: Type Selection (Conditional) -->
     <div id="qb-step-4" class="qb-step-content">
-      <h1 class="qb-step-title">광고면 옵션을 선택해주세요</h1>
-      <p class="qb-step-subtitle">상단, 하단, 또는 광고면 없이 선택 가능합니다</p>
+      <h1 class="qb-step-title">타입을 선택해주세요</h1>
+      <p class="qb-step-subtitle">포켓형, 집게형, 덮개형 중 선택하세요</p>
 
-      <div id="qb-ad-panels-container"></div>
+      <div id="qb-types-container"></div>
+      <div id="qb-molding-container" style="display:none;"></div>
 
       <div class="qb-button-group">
         <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
@@ -1781,8 +1781,8 @@
       const prod = PRODUCTS[qb_state.selectedSeries];
       const steps = [1, 2];
       if (prod) {
-        if (prod.hasType) steps.push(3);
-        if (prod.hasAdPanel) steps.push(4);
+        if (prod.hasAdPanel) steps.push(3);
+        if (prod.hasType) steps.push(4);
         if (prod.hasDesign) steps.push(5);
         if (prod.addons && prod.addons.length > 0) steps.push(6);
       } else {
@@ -1836,8 +1836,8 @@
       const labels = {1: '시리즈', 2: '장수'};
       let step = 3;
       if (prod) {
-        if (prod.hasType) { labels[step] = '타입'; step++; }
         if (prod.hasAdPanel) { labels[step] = '광고면'; step++; }
+        if (prod.hasType) { labels[step] = '타입'; step++; }
         if (prod.hasDesign) { labels[step] = '디자인'; step++; }
         if (prod.addons && prod.addons.length > 0) { labels[step] = '추가옵션'; step++; }
       } else {
@@ -2004,7 +2004,10 @@
         const typeOpt = prod && prod.typeOptions ? prod.typeOptions.find(t => t.name === type) : null;
         const rawDelta = typeOpt ? typeOpt.delta : 0;
         const delta = (typeof rawDelta === 'object') ? (rawDelta[qb_state.selectedSize] || 0) : (rawDelta || 0);
-        const priceLabel = delta > 0 ? `<span style="color:#4A7BF7;font-weight:700;font-size:14px;">+${qb_formatPrice(delta)}</span>` : `<span style="color:#9ca3af;font-size:13px;">추가금 없음</span>`;
+        const adPanels = qb_getAdPanels();
+        const adPanelPrice = (qb_state.selectedAdPanel !== null && adPanels[qb_state.selectedAdPanel]) ? adPanels[qb_state.selectedAdPanel].price : 0;
+        const displayDelta = adPanelPrice + delta;
+        const priceLabel = displayDelta > 0 ? `<span style="color:#4A7BF7;font-weight:700;font-size:14px;">+${qb_formatPrice(displayDelta)}</span>` : `<span style="color:#9ca3af;font-size:13px;">추가금 없음</span>`;
         html += `
           <div class="qb-card ${qb_state.selectedType === type ? 'selected' : ''}" onclick="qb_selectType('${type}')" style="display:flex;gap:16px;align-items:center;padding:12px">
             <img src="${img}" alt="${type}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;cursor:zoom-in;background:#1e1e38;border:1px solid #353560" onerror="this.onerror=null;this.alt='${type}'" onclick="event.stopPropagation();qb_showImageZoom('${img}','${type}')">
@@ -2043,7 +2046,7 @@
         moldingWrap.style.display = 'none';
       }
 
-      const btn = document.getElementById('qb-step3-next');
+      const btn = document.getElementById('qb-step4-next');
       const needMolding = prod && prod.designType === 'wood';
       btn.disabled = !qb_state.selectedType || (needMolding && !qb_state.selectedMolding);
     }
@@ -2088,12 +2091,14 @@
       });
 
       document.getElementById('qb-ad-panels-container').innerHTML = html;
-      const btn = document.getElementById('qb-step4-next');
+      const btn = document.getElementById('qb-step3-next');
       btn.disabled = qb_state.selectedAdPanel === null;
     }
 
     function qb_selectAdPanel(idx) {
       qb_state.selectedAdPanel = idx;
+      qb_state.selectedType = null;
+      qb_state.selectedMolding = null;
       qb_state.selectedDesign = null;
       qb_renderAdPanels();
       qb_updatePriceBar();
@@ -2761,8 +2766,8 @@
     // 스텝 이동 시 렌더 함수 호출 (절대 스텝 번호 기준)
     function qb_renderStep(stepNum) {
       if (stepNum === 2) qb_renderSizeSelection();
-      else if (stepNum === 3) qb_renderTypeSelection();
-      else if (stepNum === 4) qb_renderAdPanels();
+      else if (stepNum === 3) qb_renderAdPanels();
+      else if (stepNum === 4) qb_renderTypeSelection();
       else if (stepNum === 5) qb_renderDesignSelection();
       else if (stepNum === 6) qb_renderAddons();
       else if (stepNum === 9) qb_renderConfirmation();
