@@ -1434,7 +1434,7 @@
         desc:"합리적 가격의 디자인 게시판"
       },
       "크리스탈": {
-        sizes: {"1구":{price:35000,ship:8000,islandShip:6000},"2구":{price:66000,ship:8000,islandShip:6000},"3구":{price:90000,ship:12000,islandShip:6000},"4구":{price:110000,ship:12000,islandShip:6000},"6구":{price:138000,ship:15000,islandShip:6000},"8구":{price:190000,ship:-1,islandShip:6000},"10구":{price:240000,ship:-1,islandShip:6000}},
+        sizes: {"1구":{price:35000,ship:8000,islandShip:6000},"2구":{price:66000,ship:8000,islandShip:6000},"3구":{price:90000,ship:12000,islandShip:6000},"4구":{price:110000,ship:12000,islandShip:6000},"6구":{price:138000,ship:15000,islandShip:6000},"8구":{price:190000,ship:-2,islandShip:6000},"10구":{price:240000,ship:-2,islandShip:6000}},
         hasType:false, hasAdPanel:true, hasDesign:true, designType:"crystal",
         adPanelSet:"크리스탈",
         addons:[{name:"고리추가 2개",price:2000}],requireNote:false,
@@ -2622,12 +2622,13 @@
       });
 
       const isCOD = shippingPrice === -1;
+      const isCODQuick = shippingPrice === -2;
       const islandExtra = (qb_state.isIsland && sizeData.islandShip) ? sizeData.islandShip : 0;
-      const displayShipping = isCOD ? 0 : shippingPrice;
+      const displayShipping = (isCOD || isCODQuick) ? 0 : shippingPrice;
       const total = productPrice + displayShipping + islandExtra;
-      let shippingText = isCOD ? '착불(화물배송)' : qb_formatPrice(shippingPrice);
+      let shippingText = isCOD ? '착불(화물배송)' : isCODQuick ? '착불(퀵배송)' : qb_formatPrice(shippingPrice);
       if (islandExtra > 0) shippingText += ' + 도서산간 ' + qb_formatPrice(islandExtra);
-      const totalText = isCOD ? qb_formatPrice(productPrice) + ' + 착불' : qb_formatPrice(total);
+      const totalText = (isCOD || isCODQuick) ? qb_formatPrice(productPrice) + ' + 착불' : qb_formatPrice(total);
 
       document.getElementById('qb-price-product').textContent = qb_formatPrice(productPrice);
       document.getElementById('qb-price-shipping').textContent = shippingText;
@@ -2748,7 +2749,7 @@ function qb_checkCustomerForm() {
         productPrice += qb_getAddonPrice(prod.addons[idx]);
       });
 
-      const total = productPrice + shippingPrice;
+      const total = (shippingPrice < 0) ? productPrice : productPrice + shippingPrice;
 
       const orderData = {
         series: qb_state.selectedSeries,
