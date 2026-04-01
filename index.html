@@ -2011,10 +2011,7 @@
         const typeOpt = prod && prod.typeOptions ? prod.typeOptions.find(t => t.name === type) : null;
         const rawDelta = typeOpt ? typeOpt.delta : 0;
         const delta = (typeof rawDelta === 'object') ? (rawDelta[qb_state.selectedSize] || 0) : (rawDelta || 0);
-        const adPanels = qb_getAdPanels();
-        const adPanelPrice = (qb_state.selectedAdPanel !== null && adPanels[qb_state.selectedAdPanel]) ? adPanels[qb_state.selectedAdPanel].price : 0;
-        const displayDelta = adPanelPrice + delta;
-        const priceLabel = displayDelta > 0 ? `<span style="color:#4A7BF7;font-weight:700;font-size:14px;">+${qb_formatPrice(displayDelta)}</span>` : `<span style="color:#9ca3af;font-size:13px;">추가금 없음</span>`;
+        const priceLabel = delta > 0 ? `<span style="color:#4A7BF7;font-weight:700;font-size:14px;">+${qb_formatPrice(delta)}</span>` : `<span style="color:#9ca3af;font-size:13px;">추가금 없음</span>`;
         html += `
           <div class="qb-card ${qb_state.selectedType === type ? 'selected' : ''}" onclick="qb_selectType('${type}')" style="display:flex;gap:16px;align-items:center;padding:12px">
             <img src="${img}" alt="${type}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex-shrink:0;cursor:zoom-in;background:#1e1e38;border:1px solid #353560" onerror="this.onerror=null;this.alt='${type}'" onclick="event.stopPropagation();qb_showImageZoom('${img}','${type}')">
