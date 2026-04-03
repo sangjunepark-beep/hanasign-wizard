@@ -1932,8 +1932,8 @@
         labels[3] = '타입'; labels[4] = '광고면'; labels[5] = '디자인';
         labels[6] = '추가옵션'; step = 7;
       }
-      // v3: 요청사항·주문자 단계 제거, 마지막은 최종확인
-      labels[9] = '최종확인';
+      // v3: 마지막 순번에 최종확인 표시
+      labels[step] = '최종확인';
       return labels;
     }
 
@@ -2768,8 +2768,7 @@
         <div class="qb-confirmation-row">
           <div class="qb-confirmation-label">주문자명</div>
           <div class="qb-confirmation-value">
-            <div class="qb-confirmation-text">${qb_state.customerName}</div>
-            <button class="qb-confirmation-edit" onclick="qb_jumpToStep(8)">수정</button>
+            <div class="qb-confirmation-text" id="qb-confirm-name">${qb_state.customerName}</div>
           </div>
         </div>
       `;
@@ -2778,7 +2777,7 @@
         <div class="qb-confirmation-row">
           <div class="qb-confirmation-label">연락처</div>
           <div class="qb-confirmation-value">
-            <div class="qb-confirmation-text">${qb_state.customerPhone}</div>
+            <div class="qb-confirmation-text" id="qb-confirm-phone">${qb_state.customerPhone}</div>
           </div>
         </div>
       `;
@@ -2918,9 +2917,13 @@
 function qb_checkCustomerForm() {
       const name = document.getElementById('qb-name').value.trim();
       const phone = document.getElementById('qb-phone').value.trim();
-      // v3: step8-next 대신 step9-submit 버튼 활성화 제어
       const btn = document.getElementById('qb-step9-submit');
       if (btn) btn.disabled = !(name && phone);
+      // 하단 확인 영역 실시간 반영
+      const nameEl = document.getElementById('qb-confirm-name');
+      const phoneEl = document.getElementById('qb-confirm-phone');
+      if (nameEl) nameEl.textContent = name;
+      if (phoneEl) phoneEl.textContent = phone;
     }
 
     function qb_validateCustomerInfo() {
