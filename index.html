@@ -1250,10 +1250,10 @@
       <div class="qb-input-group" style="margin-top:20px;padding-top:20px;border-top:1px solid #353560;">
         <label class="qb-label">주문 수량</label>
         <div style="display:flex;align-items:center;gap:12px;">
-          <button type="button" onclick="const q=document.getElementById('qb-qty');q.value=Math.max(1,parseInt(q.value||1)-1)" style="width:36px;height:36px;border-radius:6px;border:1px solid #4a4a70;background:#1e1e38;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
-          <input type="number" id="qb-qty" value="1" min="1" max="999"
+          <button type="button" onclick="const q=document.getElementById('qb-qty');q.value=Math.max(1,parseInt(q.value||1)-1);qb_state.qty=parseInt(q.value);qb_updatePriceBar();" style="width:36px;height:36px;border-radius:6px;border:1px solid #4a4a70;background:#1e1e38;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+          <input type="number" id="qb-qty" value="1" min="1" max="999" oninput="qb_state.qty=parseInt(this.value)||1;qb_updatePriceBar();"
             style="width:70px;text-align:center;padding:8px;border:1px solid #4a4a70;border-radius:6px;background:#1e1e38;color:#fff;font-size:16px;font-weight:600;">
-          <button type="button" onclick="const q=document.getElementById('qb-qty');q.value=parseInt(q.value||1)+1" style="width:36px;height:36px;border-radius:6px;border:1px solid #4a4a70;background:#1e1e38;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+          <button type="button" onclick="const q=document.getElementById('qb-qty');q.value=parseInt(q.value||1)+1;qb_state.qty=parseInt(q.value);qb_updatePriceBar();" style="width:36px;height:36px;border-radius:6px;border:1px solid #4a4a70;background:#1e1e38;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
           <span style="color:#a0a0c0;font-size:13px;">개 (기본: 1개)</span>
         </div>
       </div>
@@ -2824,12 +2824,14 @@
         }
       });
 
+      const qty = qb_state.qty || parseInt(document.getElementById('qb-qty')?.value) || 1;
+      productPrice = productPrice * qty;
       const isCOD = shippingPrice === -1;
       const isCODQuick = shippingPrice === -2;
-      const islandExtra = (qb_state.isIsland && sizeData.islandShip) ? sizeData.islandShip : 0;
-      const displayShipping = (isCOD || isCODQuick) ? 0 : shippingPrice;
+      const islandExtra = (qb_state.isIsland && sizeData.islandShip) ? sizeData.islandShip * qty : 0;
+      const displayShipping = (isCOD || isCODQuick) ? 0 : shippingPrice * qty;
       const total = productPrice + displayShipping + islandExtra;
-      let shippingText = isCOD ? '착불(화물배송)' : isCODQuick ? '착불(퀵배송)' : qb_formatPrice(shippingPrice);
+      let shippingText = isCOD ? '착불(화물배송)' : isCODQuick ? '착불(퀵배송)' : qb_formatPrice(shippingPrice * qty);
       if (islandExtra > 0) shippingText += ' + 도서산간 ' + qb_formatPrice(islandExtra);
       const totalText = (isCOD || isCODQuick) ? qb_formatPrice(productPrice) + ' + 착불' : qb_formatPrice(total);
 
