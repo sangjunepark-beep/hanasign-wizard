@@ -2162,7 +2162,7 @@
       }
 
       // 번호형 디자인 (아크릴/슬림자석/크리스탈: 순번 이미지 그리드)
-      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
+      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum' || prod.designType === 'galva') {
         const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : prod.designType === 'galva' ? GALVA_DESIGNS : ALUM_DESIGNS;
         document.getElementById('qb-design-category-tabs').innerHTML = `<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">배경 디자인을 선택하세요 (총 ${designs.length}종)</p>`;
         document.getElementById('qb-design-grid').style.display = '';
@@ -2315,7 +2315,7 @@
       const prod = PRODUCTS[qb_state.selectedSeries];
 
       // 번호형 디자인 (아크릴/슬림자석/크리스탈/안전강화유리/알루미늄)
-      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
+      if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum' || prod.designType === 'galva') {
         const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : prod.designType === 'galva' ? GALVA_DESIGNS : ALUM_DESIGNS;
         designs.forEach((path, idx) => {
           const num = String(idx + 1).padStart(2, '0');
@@ -2639,7 +2639,7 @@
         const designKey = qb_state.selectedDesign;
         let designImgUrl = '';
         let designLabel = '디자인';
-        if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
+        if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum' || prod.designType === 'galva') {
           // 번호형 (아크릴/슬림자석/크리스탈/안전강화유리/알루미늄): SEQ_DESIGN_BASE + 배열 경로
           const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : prod.designType === 'galva' ? GALVA_DESIGNS : ALUM_DESIGNS;
           const numStr = designKey.split('_')[1]; // 'acryl_01' → '01'
