@@ -1496,9 +1496,18 @@
         desc:"안전보건 법령 게시용 슬림디자인 게시판"
       },
       "산업안전보건": {
-        sizes: {"1장":{price:72000,ship:0,islandShip:6000},"2장":{price:82000,ship:0,islandShip:6000},"3장":{price:94500,ship:0,islandShip:6000},"4장(가로)":{price:110500,ship:0,islandShip:6000},"4장(세로)":{price:131500,ship:0,islandShip:6000},"6장":{price:132100,ship:0,islandShip:6000}},
-        hasType:false, hasAdPanel:false, hasDesign:false,
-        addons:[],requireNote:false,
+        sizes: {"1구":{price:72000,ship:0,islandShip:6000},"2구":{price:82000,ship:0,islandShip:6000},"3구":{price:94500,ship:0,islandShip:6000},"4구(가로)":{price:110500,ship:0,islandShip:6000},"4구(세로)":{price:131500,ship:0,islandShip:6000},"6구":{price:132100,ship:0,islandShip:6000}},
+        hasType:false, hasAdPanel:false, hasDesign:true, hasColor:true,
+        colorOptions:["그린","블루"],
+        colorImages:{
+          "1구":{"그린":IMG_BASE+"/2026/01/06/7f163dbe8fa035075401c83ae05f0579d0d37d9e.png","블루":IMG_BASE+"/2026/01/06/47ddc8975a9a55c5b558a7b9abd3775e98b36299.png"},
+          "2구":{"그린":IMG_BASE+"/2026/01/06/81b9807fc6388be2d129df2ea990ffceabdc1a5b.png","블루":IMG_BASE+"/2026/01/06/6e5d479d60672180ba1696df6708b74666b9831d.png"},
+          "3구":{"그린":IMG_BASE+"/2026/01/06/b209bd8881a43986ca862495c2c012859e7de418.png","블루":IMG_BASE+"/2026/01/06/f88c586beff06605bf2889499f7e6f3aa0546430.png"},
+          "4구(가로)":{"그린":IMG_BASE+"/2026/01/06/e5303e797ca58907862dae599c0df9dcc626a059.png","블루":IMG_BASE+"/2026/01/06/d0dc96a1282f4256f560140525b0162d229aaf34.png"},
+          "4구(세로)":{"그린":IMG_BASE+"/2026/01/06/d1c735606604b31d04c35e30586036e331f689de.png","블루":IMG_BASE+"/2026/01/06/373ec2cdae1f11a4adaeed221e513bb7.png"},
+          "6구":{"그린":IMG_BASE+"/2026/01/06/e7ffce84b44a14f121937d7a046d3f0b1dbb9d47.png","블루":IMG_BASE+"/2026/01/06/61135084de1dd248a828989658d0e58538a80b03.png"}
+        },
+        addons:[{name:"신규디자인신청",price:10000}],requireNote:false,
         desc:"산업안전보건법 의무 게시 전용"
       },
       "갈바": {
@@ -1737,18 +1746,12 @@
         "10장": IMG_BASE + "/2025/01/14/8786b9e7f08f63d6a45c0519e4340b1a99ca0dbc.png"
       },
       "산업안전보건": {
-        "1장 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "2장 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "3장 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "4장 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "5구 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "6장 가로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "1장 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "2장 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "3장 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "4장 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "5구 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
-        "6장 세로": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg"
+        "1구": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "2구": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "3구": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "4구(가로)": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "4구(세로)": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg",
+        "6구": IMG_BASE + "/2025/10/24/34961e26485264c0648fd121a898c60609a1f485.jpg"
       },
       "갈바": {
         "갈바게시판": IMG_BASE + "/2023/12/28/9095ca0cad1bdbf14f3cb95f695112542e073c9c.jpg",
@@ -2114,10 +2117,10 @@
     function qb_renderDesignSelection() {
       const prod = PRODUCTS[qb_state.selectedSeries];
 
-      // 색상 선택형 - colorImages 있는 경우 (슬림안전보건: 장수×타입×색상 조합 이미지)
+      // 색상 선택형 - colorImages 있는 경우 (슬림안전보건: 장수×타입×색상 / 산업안전보건: 구수×색상)
       if (prod.colorImages) {
         const sizeImgs = prod.colorImages[qb_state.selectedSize] || {};
-        const typeImgs = sizeImgs[qb_state.selectedType] || {};
+        const typeImgs = qb_state.selectedType ? (sizeImgs[qb_state.selectedType] || {}) : sizeImgs;
         const colors = prod.colorOptions || [];
         document.getElementById('qb-design-category-tabs').innerHTML = '<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">색상을 선택하세요</p>';
         let html = '';
@@ -2637,10 +2640,10 @@
           const colorName = prod.colorOptions && prod.colorOptions[idx] ? prod.colorOptions[idx] : '';
           designImgUrl = (colorName && WOOD_COLOR_IMAGES[colorName]) ? SEQ_DESIGN_BASE + WOOD_COLOR_IMAGES[colorName] : '';
         } else if (prod.colorImages) {
-          // 색상 선택형 (슬림안전보건): colorImages에서 이미지 가져오기
+          // 색상 선택형 (슬림안전보건: 구수×타입×색상 / 산업안전보건: 구수×색상)
           designLabel = '색상';
           const sizeImgs = prod.colorImages[qb_state.selectedSize] || {};
-          const typeImgs = sizeImgs[qb_state.selectedType] || {};
+          const typeImgs = qb_state.selectedType ? (sizeImgs[qb_state.selectedType] || {}) : sizeImgs;
           designImgUrl = typeImgs[designKey] || '';
         } else {
           const _isSD = qb_state.selectedSeries === '슬림디자인';
