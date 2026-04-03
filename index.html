@@ -1511,8 +1511,8 @@
         desc:"산업안전보건법 의무 게시 전용"
       },
       "갈바": {
-        sizes: {"갈바게시판":{price:528000,ship:40000,islandShip:6000},"갈바프레임 게시판":{price:600000,ship:40000,islandShip:6000},"갈바프레임 주문제작":{price:935000,ship:50000,islandShip:6000}},
-        hasType:false, hasAdPanel:false, hasDesign:false,
+        sizes: {"갈바게시판":{price:528000,ship:-1,islandShip:6000},"갈바프레임 게시판":{price:600000,ship:-1,islandShip:6000},"갈바프레임 주문제작":{price:935000,ship:-1,islandShip:6000}},
+        hasType:false, hasAdPanel:false, hasDesign:true, designType:"galva",
         addons:[],requireNote:false,
         desc:"야외용 갈바 소재. 대형 게시판"
       }
@@ -1606,6 +1606,7 @@
     const ACRYL_GLASS_DESIGNS = ["2025/04/03/18ca6f0f36152122d3951961b740ab4248d95dcd.png","2025/04/03/d47c7b0dc6024faf5c049b23561e7c50ce8fed45.png","2025/04/03/b8e33aa644ce3aafd2bfd0156265bf5fc0543394.png","2025/04/03/f2474fdc0d5c9445fe164e49f906d5c4702d8228.png","2025/04/03/fdfccffc613dc7b4f167df3c3721a0231f38eac3.png","2025/04/03/967ffa90847759212e69058a35c13c5ac3f8989e.png","2025/04/03/c9974d7d83acd0b66a1e511794aa017fa1eded3e.png","2025/04/03/005804cc80ea0a132e527ecafd6a24df706786ae.png","2025/04/03/9c30805d4e99435889f39768a62ce2e6ba017bf6.png","2025/04/03/ce342481b1064942a0b9cf9f71db59c11fceb7ae.png","2025/04/03/b4ebe5ae6516f443e84dac74743c978334d0d5b0.png"];
 
     // 알루미늄 게시판 디자인 9종 (2025/04/03)
+    const GALVA_DESIGNS = ["2024/05/07/a79220ef3097c4439de1008c1f5b97bd55b02286.png","2024/05/07/ef4ea98baa24f27956073f0dcb0c6b93fe096022.png"];
     const ALUM_DESIGNS = ["2025/04/03/e04379c1bd72409bed8a4bf2fb18f8a6cf698bf8.png","2025/04/03/b2b7b8cb7b91bc298ba7af6e9192ebd87a01e873.png","2025/04/03/d3939861646f7be4a4fcfe65fdaf88d07e6c1f12.png","2025/04/03/4be664820f8c4ef36705e8c26e994be54ef34c4d.png","2025/04/03/6bcbb7a78ee9a0e5ba965b6d127428906d5ec524.png","2025/04/03/06f4e35707e8b57cc352842e042f4542bf14af84.png","2025/04/03/007054364fc88d9e024636a99646872acf617129.png","2025/04/03/99c414b15ce00e82dcaca4eb31ded3cad1e84966.png","2025/04/03/06bda61fd4651d5ddbbfc3161b8f759995c5c497.png"];
 
     // 우드 게시판 몰딩 5종
@@ -2150,7 +2151,7 @@
 
       // 번호형 디자인 (아크릴/슬림자석/크리스탈: 순번 이미지 그리드)
       if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
-        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : ALUM_DESIGNS;
+        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : prod.designType === 'galva' ? GALVA_DESIGNS : ALUM_DESIGNS;
         document.getElementById('qb-design-category-tabs').innerHTML = `<p style="font-size:13px;color:#a0a0c0;margin-bottom:12px;">배경 디자인을 선택하세요 (총 ${designs.length}종)</p>`;
         document.getElementById('qb-design-grid').style.display = '';
         document.getElementById('qb-design-grid').style.flexDirection = '';
@@ -2303,7 +2304,7 @@
 
       // 번호형 디자인 (아크릴/슬림자석/크리스탈/안전강화유리/알루미늄)
       if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
-        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : ALUM_DESIGNS;
+        const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : prod.designType === 'galva' ? GALVA_DESIGNS : ALUM_DESIGNS;
         designs.forEach((path, idx) => {
           const num = String(idx + 1).padStart(2, '0');
           const key = prod.designType + '_' + num;
@@ -2628,7 +2629,7 @@
         let designLabel = '디자인';
         if (prod.designType === 'acryl' || prod.designType === 'slimmag' || prod.designType === 'crystal' || prod.designType === 'acrylglass' || prod.designType === 'alum') {
           // 번호형 (아크릴/슬림자석/크리스탈/안전강화유리/알루미늄): SEQ_DESIGN_BASE + 배열 경로
-          const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : ALUM_DESIGNS;
+          const designs = prod.designType === 'acryl' ? ACRYL_DESIGNS : prod.designType === 'slimmag' ? SLIM_MAG_DESIGNS : prod.designType === 'crystal' ? CRYSTAL_DESIGNS : prod.designType === 'acrylglass' ? ACRYL_GLASS_DESIGNS : prod.designType === 'galva' ? GALVA_DESIGNS : ALUM_DESIGNS;
           const numStr = designKey.split('_')[1]; // 'acryl_01' → '01'
           const idx = parseInt(numStr, 10) - 1;
           designImgUrl = (idx >= 0 && designs[idx]) ? SEQ_DESIGN_BASE + designs[idx] : '';
