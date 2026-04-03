@@ -1942,9 +1942,8 @@
         labels[3] = '타입'; labels[4] = '광고면'; labels[5] = '디자인';
         labels[6] = '추가옵션'; step = 7;
       }
-      labels[step] = '요청사항'; step++;
-      labels[step] = '주문자'; step++;
-      labels[step] = '확인';
+      // v3: 요청사항·주문자 단계 제거, 마지막은 최종확인
+      labels[9] = '최종확인';
       return labels;
     }
 
