@@ -251,7 +251,7 @@
 
     .qb-series-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       margin-bottom: 30px;
     }
@@ -273,6 +273,26 @@
     .qb-series-card.selected {
       border-color: #4A7BF7;
       box-shadow: 0 8px 16px rgba(74,123,247,0.25);
+      position: relative;
+    }
+    .qb-series-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      background: #4A7BF7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #fff;
+      font-weight: 700;
+      line-height: 28px;
+      text-align: center;
+      z-index: 2;
     }
 
     .qb-series-image {
@@ -454,17 +474,18 @@
       position: absolute;
       top: 6px;
       right: 6px;
-      width: 56px;
-      height: 56px;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 18px;
       color: white;
-      opacity: 0;
+      opacity: 0.75;
       transition: opacity 0.2s;
+      cursor: pointer;
     }
 
     .qb-design-item:hover .qb-design-zoom-icon,
@@ -511,6 +532,49 @@
 
     .qb-design-item.selected .qb-design-button:hover {
       background: #3a6ae6;
+    }
+
+    .qb-design-btn-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .qb-design-detail-btn {
+      flex: 1;
+      padding: 6px 4px;
+      background: transparent;
+      border: 1px solid #4a4a70;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #a0a0c0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .qb-design-detail-btn:hover {
+      background: #2a2a50;
+      border-color: #4A7BF7;
+      color: #fff;
+    }
+
+    .qb-design-button { flex: 1; }
+
+    .qb-design-selected-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 26px;
+      height: 26px;
+      background: #4A7BF7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #fff;
+      font-weight: 700;
+      line-height: 1;
+      z-index: 3;
     }
 
     .qb-button-group {
@@ -1185,12 +1249,30 @@
       </div>
     </div>
 
-    <!-- STEP 6: Addons (Conditional) -->
+    <!-- STEP 6: Addons + 수량 + 요청사항 통합 -->
     <div id="qb-step-6" class="qb-step-content">
-      <h1 class="qb-step-title">추가옵션을 선택해주세요</h1>
-      <p class="qb-step-subtitle">필요한 추가옵션을 선택하세요 (선택 사항)</p>
+      <h1 class="qb-step-title">추가옵션 · 수량 · 요청사항</h1>
+      <p class="qb-step-subtitle">추가옵션을 선택하고 수량과 요청사항을 입력하세요</p>
 
       <div id="qb-addons-container"></div>
+
+      <!-- 수량 -->
+      <div class="qb-input-group" style="margin-top:20px;padding-top:20px;border-top:1px solid #353560;">
+        <label class="qb-label">주문 수량</label>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button type="button" onclick="const q=document.getElementById('qb-qty');q.value=Math.max(1,parseInt(q.value||1)-1)" style="width:36px;height:36px;border-radius:6px;border:1px solid #4a4a70;background:#1e1e38;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+          <input type="number" id="qb-qty" value="1" min="1" max="999"
+            style="width:70px;text-align:center;padding:8px;border:1px solid #4a4a70;border-radius:6px;background:#1e1e38;color:#fff;font-size:16px;font-weight:600;">
+          <button type="button" onclick="const q=document.getElementById('qb-qty');q.value=parseInt(q.value||1)+1" style="width:36px;height:36px;border-radius:6px;border:1px solid #4a4a70;background:#1e1e38;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+          <span style="color:#a0a0c0;font-size:13px;">개 (기본: 1개)</span>
+        </div>
+      </div>
+
+      <!-- 요청사항 -->
+      <div class="qb-input-group" style="margin-top:16px;">
+        <label class="qb-label">요청사항 <span style="color:#a0a0c0;font-weight:400;">(선택)</span></label>
+        <textarea id="qb-notes" placeholder="예: 큰 글씨로 표기해주세요, 특정 색상 변경 요청 등..." style="min-height:90px;"></textarea>
+      </div>
 
       <div class="qb-button-group">
         <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
@@ -1216,34 +1298,29 @@
       </div>
     </div>
 
-    <!-- STEP 8: Customer Info -->
-    <div id="qb-step-8" class="qb-step-content">
-      <h1 class="qb-step-title">주문자 정보를 입력해주세요</h1>
-      <p class="qb-step-subtitle" style="color:#FF8C00;font-weight:700;">스마트스토어 주문시 입력하는 수취인명과 전화번호를 동일하게 입력해주셔야 합니다.<br>주문매칭에 필수이니 이점 확인 바랍니다.</p>
+    <!-- STEP 8: (v3에서 step9로 통합됨, 미사용) -->
+    <div id="qb-step-8" class="qb-step-content" style="display:none!important;">
+      <input type="text" id="qb-name-unused" style="display:none">
+      <input type="tel" id="qb-phone-unused" style="display:none">
+      <button id="qb-step8-next" style="display:none">unused</button>
+    </div>
 
-      <div id="qb-customer-info-form">
+    <!-- STEP 9: 주문자 정보 + 최종 확인 통합 -->
+    <div id="qb-step-9" class="qb-step-content">
+      <h1 class="qb-step-title">주문자 정보 · 최종 확인</h1>
+      <p class="qb-step-subtitle" style="color:#FF8C00;font-weight:700;">스마트스토어 주문 시 수취인명·전화번호와 동일하게 입력해주세요</p>
+
+      <!-- 주문자 정보 (기존 step8에서 이동) -->
+      <div id="qb-customer-info-form" style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #353560;">
         <div class="qb-input-group">
           <label class="qb-label qb-label-required">주문자명</label>
           <input type="text" id="qb-name" placeholder="예: 홍길동" required oninput="qb_checkCustomerForm()">
         </div>
-
         <div class="qb-input-group">
           <label class="qb-label qb-label-required">연락처</label>
           <input type="tel" id="qb-phone" placeholder="010-0000-0000" required oninput="qb_checkCustomerForm()">
         </div>
-
       </div>
-
-      <div class="qb-button-group">
-        <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
-        <button class="qb-button qb-button-primary" id="qb-step8-next" disabled>다음 단계</button>
-      </div>
-    </div>
-
-    <!-- STEP 9: Final Confirmation -->
-    <div id="qb-step-9" class="qb-step-content">
-      <h1 class="qb-step-title">주문 내용을 확인하세요</h1>
-      <p class="qb-step-subtitle">모든 정보가 올바른지 확인 후 주문을 접수하세요</p>
 
       <div id="qb-confirmation-container" class="qb-confirmation"></div>
 
@@ -1272,7 +1349,7 @@
 
       <div class="qb-button-group">
         <button class="qb-button qb-button-secondary" onclick="qb_prevStep()">이전</button>
-        <button class="qb-button qb-button-primary" id="qb-step9-submit">주문 접수</button>
+        <button class="qb-button qb-button-primary" id="qb-step9-submit" disabled>주문 접수</button>
       </div>
     </div>
   </div>
@@ -1808,7 +1885,7 @@
       } else {
         steps.push(3, 4, 5, 6);
       }
-      steps.push(7, 8, 9);
+      steps.push(9); // v3: 요청사항(7)은 6에 통합, 주문자(8)는 9에 통합
       return steps;
     }
 
@@ -2174,14 +2251,18 @@
           const key = prod.designType + '_' + num;
           const img = SEQ_DESIGN_BASE + path;
           html += `
-            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}" onclick="qb_selectDesign('${key}', event)">
-              <div style="position:relative;">
+            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}">
+              <div style="position:relative;cursor:zoom-in;" onclick="qb_openZoom('${key}', event)">
                 <img src="${img}" alt="${num}" class="qb-design-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
-                <div class="qb-design-zoom-icon" onclick="qb_openZoom('${key}', event)">🔍</div>
+                <div class="qb-design-zoom-icon">🔍</div>
+                ${qb_state.selectedDesign === key ? '<div class="qb-design-selected-badge">✓</div>' : ''}
               </div>
               <div class="qb-design-info">
                 <div class="qb-design-code">${num}</div>
-                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">선택</button>
+                <div class="qb-design-btn-row">
+                  <button class="qb-design-detail-btn" onclick="qb_openZoom('${key}', event)">상세보기</button>
+                  <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
+                </div>
               </div>
             </div>
           `;
@@ -2204,14 +2285,18 @@
           const numLabel = String(i + 1).padStart(2, '0');
           const key = 'wood_' + numLabel;
           html += `
-            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}" onclick="qb_selectDesign('${key}', event)">
-              <div style="position:relative;">
+            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}">
+              <div style="position:relative;cursor:zoom-in;" onclick="qb_openZoom('${key}', event)">
                 <img src="${imgUrl}" alt="${color}" class="qb-design-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
-                <div class="qb-design-zoom-icon" onclick="qb_openZoom('${key}', event)">🔍</div>
+                <div class="qb-design-zoom-icon">🔍</div>
+                ${qb_state.selectedDesign === key ? '<div class="qb-design-selected-badge">✓</div>' : ''}
               </div>
               <div class="qb-design-info">
                 <div class="qb-design-code">${color}</div>
-                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">선택</button>
+                <div class="qb-design-btn-row">
+                  <button class="qb-design-detail-btn" onclick="qb_openZoom('${key}', event)">상세보기</button>
+                  <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
+                </div>
               </div>
             </div>
           `;
@@ -2266,14 +2351,18 @@
         if (hash) {
           const img = baseUrl + hash;
           html += `
-            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}" onclick="qb_selectDesign('${key}', event)">
-              <div style="position: relative;">
+            <div class="qb-design-item ${qb_state.selectedDesign === key ? 'selected' : ''}">
+              <div style="position:relative;cursor:zoom-in;" onclick="qb_openZoom('${key}', event)">
                 <img src="${img}" alt="${design}" class="qb-design-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
-                <div class="qb-design-zoom-icon" onclick="qb_openZoom('${key}', event)">🔍</div>
+                <div class="qb-design-zoom-icon">🔍</div>
+                ${qb_state.selectedDesign === key ? '<div class="qb-design-selected-badge">✓</div>' : ''}
               </div>
               <div class="qb-design-info">
                 <div class="qb-design-code">${design}</div>
-                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">선택</button>
+                <div class="qb-design-btn-row">
+                  <button class="qb-design-detail-btn" onclick="qb_openZoom('${key}', event)">상세보기</button>
+                  <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
+                </div>
               </div>
             </div>
           `;
@@ -2795,7 +2884,11 @@
       else if (stepNum === 4) qb_renderTypeSelection();
       else if (stepNum === 5) qb_renderDesignSelection();
       else if (stepNum === 6) qb_renderAddons();
-      else if (stepNum === 9) qb_renderConfirmation();
+      else if (stepNum === 9) {
+        qb_renderConfirmation();
+        // v3: step9 진입 시 주문자 폼 초기 disabled 상태 체크
+        qb_checkCustomerForm();
+      }
     }
 
     function qb_nextStep() {
@@ -2843,7 +2936,8 @@
 function qb_checkCustomerForm() {
       const name = document.getElementById('qb-name').value.trim();
       const phone = document.getElementById('qb-phone').value.trim();
-      const btn = document.getElementById('qb-step8-next');
+      // v3: step8-next 대신 step9-submit 버튼 활성화 제어
+      const btn = document.getElementById('qb-step9-submit');
       if (btn) btn.disabled = !(name && phone);
     }
 
@@ -2898,6 +2992,7 @@ function qb_checkCustomerForm() {
         adPanel: qb_state.selectedAdPanel !== null ? qb_getAdPanels()[qb_state.selectedAdPanel].value : null,
         design: qb_state.selectedDesign,
         addons: qb_state.selectedAddons.map(idx => prod.addons[idx].name),
+        qty: qb_state.qty || parseInt(document.getElementById('qb-qty')?.value) || 1,
         notes: qb_state.notes,
         customerName: qb_state.customerName,
         customerPhone: qb_state.customerPhone,
@@ -2956,19 +3051,17 @@ function qb_checkCustomerForm() {
     document.getElementById('qb-step3-next').addEventListener('click', qb_nextStep);
     document.getElementById('qb-step4-next').addEventListener('click', qb_nextStep);
     document.getElementById('qb-step5-next').addEventListener('click', qb_nextStep);
-    document.getElementById('qb-step6-next').addEventListener('click', qb_nextStep);
-    document.getElementById('qb-step7-next').addEventListener('click', () => {
+    document.getElementById('qb-step6-next').addEventListener('click', () => {
+      // v3: 요청사항과 수량을 step6에서 저장
       qb_state.notes = document.getElementById('qb-notes').value.trim();
+      qb_state.qty = parseInt(document.getElementById('qb-qty').value) || 1;
       qb_nextStep();
     });
-
-    document.getElementById('qb-step8-next').addEventListener('click', () => {
-      if (qb_validateCustomerInfo()) {
-        qb_nextStep();
-      } else {
-        alert('모든 정보를 입력해주세요');
-      }
-    });
+    // v3: step7, step8은 비활성 스텝이므로 리스너는 있어도 동작 안 함
+    const _s7btn = document.getElementById('qb-step7-next');
+    if (_s7btn) _s7btn.addEventListener('click', qb_nextStep);
+    const _s8btn = document.getElementById('qb-step8-next');
+    if (_s8btn) _s8btn.addEventListener('click', qb_nextStep);
 
     document.getElementById('qb-step9-submit').addEventListener('click', qb_submitOrder);
 
