@@ -263,36 +263,38 @@
       overflow: hidden;
       cursor: pointer;
       transition: all 0.2s ease;
+      position: relative;
     }
 
     .qb-series-card:hover {
       border-color: #4A7BF7;
-      box-shadow: 0 8px 16px rgba(74,123,247,0.2);
+      box-shadow: 0 8px 20px rgba(74,123,247,0.25);
     }
 
     .qb-series-card.selected {
-      border-color: #4A7BF7;
-      box-shadow: 0 8px 16px rgba(74,123,247,0.25);
-      position: relative;
+      border: 3px solid #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(29,78,216,0.25), 0 8px 24px rgba(29,78,216,0.3);
     }
+    /* 선택 체크 배지 — 우측 하단, 더 크게 */
     .qb-series-card.selected::after {
       content: '✓';
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 28px;
-      height: 28px;
-      background: #4A7BF7;
+      bottom: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      background: #1d4ed8;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 20px;
       color: #fff;
-      font-weight: 700;
-      line-height: 28px;
+      font-weight: 900;
+      line-height: 38px;
       text-align: center;
-      z-index: 2;
+      z-index: 4;
+      box-shadow: 0 2px 8px rgba(29,78,216,0.4);
     }
 
     .qb-series-image {
@@ -304,45 +306,53 @@
       min-height: 60px;
     }
 
+    /* 글자 영역: 화이트 배경 + 네이비 텍스트 */
     .qb-series-info {
       padding: 14px;
       text-align: center;
-      background: transparent;
+      background: #ffffff;
     }
 
     .qb-series-name {
       font-weight: 800;
       font-size: 20px;
       margin-bottom: 4px;
-      color: #ffffff;
+      color: #1a2560;
     }
 
     .qb-series-desc {
       font-size: 15px;
-      color: #9ca3b8;
+      color: #3a4a7a;
       margin-bottom: 8px;
       line-height: 1.4;
     }
 
     .qb-series-meta {
       font-size: 13px;
-      color: #7a7a98;
+      color: #5a6a9a;
+      margin-bottom: 4px;
     }
 
+    /* 상세페이지 버튼 — 타이틀 위에 표시 */
     .qb-detail-btn {
-      margin-top: 8px;
-      padding: 6px 14px;
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 7px 14px;
       font-size: 12px;
-      color: #4A7BF7;
-      background: #ffffff;
-      border: 1px solid #d0d0e0;
-      border-radius: 4px;
+      font-weight: 600;
+      color: #1d4ed8;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.15s;
+      text-align: center;
     }
     .qb-detail-btn:hover {
-      background: #f0f0f8;
-      color: #3a6be0;
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1e40af;
     }
 
     /* 상세페이지 뷰어 모달 */
@@ -1981,10 +1991,10 @@
                onclick="qb_selectSeries('${series}')">
             <img src="${img}" alt="${series}" class="qb-series-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
             <div class="qb-series-info">
+              <button class="qb-detail-btn" onclick="event.stopPropagation();qb_openDetailPage('${series}')">상세페이지 보기 →</button>
               <div class="qb-series-name">${series}</div>
               <div class="qb-series-desc">${prod.desc}</div>
               <div class="qb-series-meta">${qb_formatPrice(minPrice)} ~ ${qb_formatPrice(maxPrice)}</div>
-              <button class="qb-detail-btn" onclick="event.stopPropagation();qb_openDetailPage('${series}')">상세페이지 보기</button>
             </div>
           </div>
         `;
@@ -2003,10 +2013,10 @@
                onclick="qb_selectSeries('${series}')">
             <img src="${img}" alt="${series}" class="qb-series-image" onerror="this.onerror=null;this.style.background='#1e1e38';this.style.minHeight='80px'">
             <div class="qb-series-info">
+              <button class="qb-detail-btn" onclick="event.stopPropagation();qb_openDetailPage('${series}')">상세페이지 보기 →</button>
               <div class="qb-series-name">${series}</div>
               <div class="qb-series-desc">${prod.desc}</div>
               <div class="qb-series-meta">${qb_formatPrice(minPrice)} ~ ${qb_formatPrice(maxPrice)}</div>
-              <button class="qb-detail-btn" onclick="event.stopPropagation();qb_openDetailPage('${series}')">상세페이지 보기</button>
             </div>
           </div>
         `;
