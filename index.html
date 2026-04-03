@@ -473,7 +473,7 @@
     }
 
     .qb-design-item.selected {
-      border-color: #4A7BF7;
+      border: 3px solid #4A7BF7;
       background: #2a2a50;
     }
 
@@ -523,12 +523,12 @@
 
     .qb-design-button {
       width: 100%;
-      padding: 6px;
+      padding: 10px;
       background: #2a2a50;
       border: 1px solid #353560;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
       color: #4A7BF7;
       cursor: pointer;
       transition: all 0.2s;
@@ -548,31 +548,6 @@
     .qb-design-item.selected .qb-design-button:hover {
       background: #3a6ae6;
     }
-
-    .qb-design-btn-row {
-      display: flex;
-      gap: 4px;
-    }
-
-    .qb-design-detail-btn {
-      flex: 1;
-      padding: 6px 4px;
-      background: transparent;
-      border: 1px solid #4a4a70;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 500;
-      color: #a0a0c0;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .qb-design-detail-btn:hover {
-      background: #2a2a50;
-      border-color: #4A7BF7;
-      color: #fff;
-    }
-
-    .qb-design-button { flex: 1; }
 
     .qb-design-selected-badge {
       position: absolute;
@@ -2273,10 +2248,7 @@
               </div>
               <div class="qb-design-info">
                 <div class="qb-design-code">${num}</div>
-                <div class="qb-design-btn-row">
-                  <button class="qb-design-detail-btn" onclick="qb_openZoom('${key}', event)">상세보기</button>
-                  <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
-                </div>
+                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
               </div>
             </div>
           `;
@@ -2307,10 +2279,7 @@
               </div>
               <div class="qb-design-info">
                 <div class="qb-design-code">${color}</div>
-                <div class="qb-design-btn-row">
-                  <button class="qb-design-detail-btn" onclick="qb_openZoom('${key}', event)">상세보기</button>
-                  <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
-                </div>
+                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
               </div>
             </div>
           `;
@@ -2373,10 +2342,7 @@
               </div>
               <div class="qb-design-info">
                 <div class="qb-design-code">${design}</div>
-                <div class="qb-design-btn-row">
-                  <button class="qb-design-detail-btn" onclick="qb_openZoom('${key}', event)">상세보기</button>
-                  <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
-                </div>
+                <button class="qb-design-button" onclick="qb_selectDesignFromButton('${key}', event)">${qb_state.selectedDesign === key ? '✓ 선택됨' : '선택'}</button>
               </div>
             </div>
           `;
