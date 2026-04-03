@@ -1512,9 +1512,10 @@
       },
       "갈바": {
         sizes: {"갈바게시판":{price:528000,ship:-1,islandShip:6000},"갈바프레임 게시판":{price:600000,ship:-1,islandShip:6000},"갈바프레임 주문제작":{price:935000,ship:-1,islandShip:6000}},
-        hasType:false, hasAdPanel:false, hasDesign:true, designType:"galva",
+        hasType:true, hasAdPanel:false, hasDesign:true, designType:"galva",
         sizeLabel:"종류",
-        addons:[],requireNote:false,
+        typeOptions:[{name:"일반타입",delta:0},{name:"아크릴 2중 포켓타입",delta:165000},{name:"이 외 주문제작 문의",delta:0}],
+        addons:[{name:"강철집게",price:4000},{name:"게시판 덮개",price:5000}],requireNote:false,
         desc:"야외용 갈바 소재. 대형 게시판"
       }
     };
