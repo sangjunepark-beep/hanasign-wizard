@@ -2064,7 +2064,7 @@
         const escapedSize = size.replace(/'/g, "\\'");
         html += `
           <div class="qb-card ${qb_state.selectedSize === size ? 'selected' : ''}" onclick="qb_selectSize('${escapedSize}')" style="display:flex;gap:14px;align-items:center;padding:10px 14px">
-            ${imgUrl ? `<img src="${imgUrl}" alt="${size}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0;cursor:zoom-in;border:1px solid #353560;background:#1e1e38" onerror="this.onerror=null;this.style.display='none'" onclick="event.stopPropagation();qb_showImageZoom('${imgUrl}','${series} ${size}')">` : ''}
+            ${imgUrl ? `<div style="position:relative;width:120px;height:120px;flex-shrink:0;cursor:zoom-in;border-radius:8px;overflow:hidden;border:1px solid #353560;background:#1e1e38" onclick="event.stopPropagation();qb_showImageZoom('${imgUrl}','${series} ${size}')"><img src="${imgUrl}" alt="${size}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.onerror=null;this.parentElement.style.display='none'"><div style="position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.55);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px;pointer-events:none">🔍</div></div>` : ''}
             <div style="flex:1">
               <div class="qb-card-radio" style="margin-bottom:0">
                 <div class="qb-radio"></div>
