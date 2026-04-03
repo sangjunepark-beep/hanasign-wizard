@@ -1492,7 +1492,7 @@
             "집게형":{"골드":IMG_BASE+"/2025/01/14/83e0f105326252928bc544f9dc98483c95f28f01.png","실버":IMG_BASE+"/2025/01/14/e261c8b84da094f1065d35f4b97cada84cc4ae27.png","블랙":IMG_BASE+"/2025/01/14/b55cace7b706de97d043423ecb6c8c46947f5eea.png"}
           }
         },
-        addons:[{name:"고리추가 2개",price:2000}],requireNote:false,
+        addons:[{name:"강화유리 포켓 추가 8구",price:20000,sizeRestrict:["8장"]},{name:"강화유리 포켓 추가 10구",price:25000,sizeRestrict:["10장"]},{name:"고리추가 2개",price:2000}],requireNote:false,
         desc:"안전보건 법령 게시용 슬림디자인 게시판"
       },
       "산업안전보건": {
@@ -2477,6 +2477,8 @@
       prod.addons.forEach((addon, idx) => {
         const addonPrice = qb_getAddonPrice(addon);
         const isTypeRestricted = addon.typeRestrict && !addon.typeRestrict.includes(qb_state.selectedType);
+        const isSizeRestricted = addon.sizeRestrict && !addon.sizeRestrict.includes(qb_state.selectedSize);
+        if (isSizeRestricted) return;
         const disabled = isTypeRestricted;
         const disabledStyle = disabled ? 'opacity:0.4;pointer-events:none;' : '';
         const disabledNote = disabled ? ' <span style="color:#6a6a88;font-size:11px;">(포켓형만 선택 가능)</span>' : '';
