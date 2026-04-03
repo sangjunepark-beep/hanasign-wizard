@@ -1513,6 +1513,7 @@
       "갈바": {
         sizes: {"갈바게시판":{price:528000,ship:-1,islandShip:6000},"갈바프레임 게시판":{price:600000,ship:-1,islandShip:6000},"갈바프레임 주문제작":{price:935000,ship:-1,islandShip:6000}},
         hasType:false, hasAdPanel:false, hasDesign:true, designType:"galva",
+        sizeLabel:"종류",
         addons:[],requireNote:false,
         desc:"야외용 갈바 소재. 대형 게시판"
       }
@@ -1844,7 +1845,7 @@
 
     function qb_getStepLabels() {
       const prod = PRODUCTS[qb_state.selectedSeries];
-      const labels = {1: '시리즈', 2: '장수'};
+      const labels = {1: '시리즈', 2: (prod && prod.sizeLabel) ? prod.sizeLabel : '장수'};
       let step = 3;
       if (prod) {
         if (prod.hasAdPanel) { labels[step] = '광고면'; step++; }
@@ -1952,6 +1953,9 @@
       const prod = PRODUCTS[series];
       const sizes = Object.keys(prod.sizes);
       const sizeImgs = SIZE_IMAGES[series] || {};
+      const sizeLabel = (prod && prod.sizeLabel) ? prod.sizeLabel : '장수';
+      const titleEl = document.querySelector('#qb-step2 .qb-step-title');
+      if (titleEl) titleEl.textContent = sizeLabel + '를 선택해주세요';
       let html = '';
 
       sizes.forEach(size => {
@@ -2557,7 +2561,7 @@
       const sizeImgUrl = sizeImgMap[qb_state.selectedSize] || '';
       html += `
         <div class="qb-confirmation-row">
-          <div class="qb-confirmation-label">장수</div>
+          <div class="qb-confirmation-label">${(prod && prod.sizeLabel) ? prod.sizeLabel : '장수'}</div>
           <div class="qb-confirmation-value">
             ${sizeImgUrl ? '<img src="' + sizeImgUrl + '" alt="' + qb_state.selectedSize + '" class="qb-confirmation-image">' : ''}
             <div class="qb-confirmation-text">${qb_state.selectedSize}</div>
